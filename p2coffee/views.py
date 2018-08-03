@@ -1,6 +1,4 @@
-from . import slack
 from braces.views import CsrfExemptMixin
-from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.utils.translation import ugettext as _
@@ -10,10 +8,9 @@ from itertools import groupby
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from p2coffee.forms import SensorEventForm, SlackOutgoingForm
+from p2coffee.forms import SensorEventForm
 from p2coffee.models import SensorEvent, CoffeePotEvent
 from p2coffee.tasks import on_new_meter
-from p2coffee.utils import coffee_image
 
 
 class CreateSensorEventView(View):
@@ -82,22 +79,14 @@ class StatsEvents(APIView):
     def _events_to_highcharts_format(self, events):
         return list(map(lambda e: [e['created'].timestamp() * 1000, float(e['value'])], events))
 
-@csrf_exempt
-class KindlyOutgoingView(View):
 
+class KindlyOutgoingView(CsrfExemptMixin, View):
     def post(self, request):
-        form = SlackOutgoingForm(request.POST)
-
-        if not form.is_valid():
-            return JsonResponse({'text': 'Invalid form'}, status=400)
-
-        user_name = form.cleaned_data['user_name']
+        print(request.POST)
 
         last_event = CoffeePotEvent.objects.last()
         brewing_status = _('I\'m a coffee pot!')
         if last_event:
             brewing_status = last_event.as_slack_text()
 
-        text = _('Hi {}, {}').format(user_name, brewing_status)
-
-        return JsonResponse({})
+        return JsonResponse({'reply': brewing_status})
