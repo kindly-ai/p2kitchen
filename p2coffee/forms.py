@@ -8,7 +8,7 @@ class SensorEventForm(forms.ModelForm):
         fields = ['name', 'value', 'id']
 
 
-class SlackOutgoingForm(forms.Form):
+class KindlyOutgoingForm(forms.Form):
     token = forms.CharField(required=True)
     team_id = forms.CharField(required=True)
     team_domain = forms.CharField(required=True)

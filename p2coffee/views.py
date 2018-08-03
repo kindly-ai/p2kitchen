@@ -82,8 +82,9 @@ class StatsEvents(APIView):
     def _events_to_highcharts_format(self, events):
         return list(map(lambda e: [e['created'].timestamp() * 1000, float(e['value'])], events))
 
+@csrf_exempt
+class KindlyOutgoingView(View):
 
-class SlackOutgoingView(CsrfExemptMixin, View):
     def post(self, request):
         form = SlackOutgoingForm(request.POST)
 
@@ -99,24 +100,4 @@ class SlackOutgoingView(CsrfExemptMixin, View):
 
         text = _('Hi {}, {}').format(user_name, brewing_status)
 
-        image_response = self._upload_current_image(text=text, channels=[settings.SLACK_CHANNEL])
-        if not image_response:
-            # If uploading the image to Slack doesn't succeed, try to post a normal message
-            data = {
-                'text': text,
-            }
-            slack.chat_post_message(channel=settings.SLACK_CHANNEL, **data)
-
         return JsonResponse({})
-
-    def _upload_current_image(self, text=None, channels=None):
-        image = coffee_image()
-        if image is None:
-            return None
-
-        response = slack.files_upload(image, initial_comment=text, channels=channels)
-        if not response['ok']:
-            return None
-
-        return response
-
