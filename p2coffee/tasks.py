@@ -10,8 +10,7 @@ from p2coffee.utils import format_local_timestamp
 logger = logging.getLogger(__name__)
 
 
-def on_new_meter(sensor_event):
-    assert isinstance(sensor_event, SensorEvent)
+def on_new_meter(sensor_event: SensorEvent):
     # FIXME values are guesstimates
     threshold_started = 1000
     threshold_finished = 500
@@ -25,13 +24,14 @@ def on_new_meter(sensor_event):
     change_events = SensorEvent.objects.filter(
             name=SensorEvent.NAME_METER_HAS_CHANGED,
             created__lt=sensor_event.created,
+            id=sensor_event.id
     ).order_by('created')
     previous_value = float(change_events.exclude(uuid=sensor_event.uuid).last().value)
 
     # Compare current with previous and check if thresholds have been crossed
     if current_value >= threshold_started > previous_value:
         cpe = CoffeePotEvent.objects.create(type=CoffeePotEvent.BREWING_STARTED)
-        # start_brewing(cpe)
+        start_brewing(cpe)
     elif current_value <= threshold_finished < previous_value:
         cpe = CoffeePotEvent.objects.create(type=CoffeePotEvent.BREWING_FINISHED)
 

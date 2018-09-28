@@ -82,8 +82,6 @@ class StatsEvents(APIView):
 
 class KindlyOutgoingView(CsrfExemptMixin, View):
     def post(self, request):
-        print(request.POST)
-
         last_event = CoffeePotEvent.objects.last()
         brewing_status = _('I\'m a coffee pot!')
         if last_event:
