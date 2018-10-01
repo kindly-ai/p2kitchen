@@ -9,6 +9,14 @@ from django_extensions.db.models import TimeStampedModel
 import uuid
 
 
+class Sensor(TimeStampedModel):
+    name = models.CharField(max_length=254)
+    sensor_id = models.CharField(max_length=254)
+
+    def __str__(self):
+        return self.name
+
+
 class SensorEvent(TimeStampedModel):
     NAME_SWITCH = 'power-switch'
     NAME_METER_HAS_CHANGED = 'power-meter-has-changed'
@@ -24,6 +32,12 @@ class SensorEvent(TimeStampedModel):
     name = models.CharField(max_length=254, choices=NAME_CHOICES)
     value = models.CharField(max_length=254)
     id = models.CharField(max_length=254)
+    sensor = models.ForeignKey(Sensor, on_delete=models.SET_NULL, blank=True, null=True, related_name='sensor_events')
+
+    def save(self, **kwargs):
+        if not self.pk:
+            self.sensor, sensor_created = Sensor.objects.get_or_create(sensor_id=self.id)
+        super().save(**kwargs)
 
     def __str__(self):
         return str(self.uuid)
@@ -46,6 +60,13 @@ class CoffeePotEvent(TimeStampedModel):
     type = models.CharField(max_length=254, choices=EVENT_TYPES)
     slack_channel = models.CharField(max_length=64, null=True, blank=True)
     slack_ts = models.CharField(max_length=64, null=True, blank=True)
+    sensor = models.ForeignKey(
+        Sensor,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name='coffee_pot_events'
+    )
 
     @staticmethod
     def _naturaltime_with_for(dt):

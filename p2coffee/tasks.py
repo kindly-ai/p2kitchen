@@ -30,10 +30,10 @@ def on_new_meter(sensor_event: SensorEvent):
 
     # Compare current with previous and check if thresholds have been crossed
     if current_value >= threshold_started > previous_value:
-        cpe = CoffeePotEvent.objects.create(type=CoffeePotEvent.BREWING_STARTED)
+        cpe = CoffeePotEvent.objects.create(type=CoffeePotEvent.BREWING_STARTED, sensor=sensor_event.sensor)
         start_brewing(cpe)
     elif current_value <= threshold_finished < previous_value:
-        cpe = CoffeePotEvent.objects.create(type=CoffeePotEvent.BREWING_FINISHED)
+        cpe = CoffeePotEvent.objects.create(type=CoffeePotEvent.BREWING_FINISHED, sensor=sensor_event.sensor)
 
 
 @task()
