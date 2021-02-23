@@ -26,7 +26,8 @@ def on_new_meter(sensor_event: SensorEvent):
             created__lt=sensor_event.created,
             id=sensor_event.id
     ).order_by('created')
-    previous_value = float(change_events.exclude(uuid=sensor_event.uuid).last().value)
+    last_sensor_event = change_events.exclude(uuid=sensor_event.uuid).last()
+    previous_value = float(last_sensor_event.value) if last_sensor_event else 0
 
     # Compare current with previous and check if thresholds have been crossed
     if current_value >= threshold_started > previous_value:

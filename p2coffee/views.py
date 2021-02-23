@@ -1,6 +1,6 @@
 from braces.views import CsrfExemptMixin
-from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
+from django.urls import reverse
 from django.utils.translation import ugettext as _
 from django.views.generic import View, TemplateView
 from itertools import groupby
