@@ -24,6 +24,7 @@ class SensorEvent(TimeStampedModel):
     name = models.CharField(max_length=254, choices=NAME_CHOICES)
     value = models.CharField(max_length=254)
     id = models.CharField(max_length=254)
+    machine = models.ForeignKey('p2coffee.Machine', on_delete=models.SET_NULL, blank=True, null=True)
 
     def __str__(self):
         return str(self.uuid)
@@ -44,6 +45,8 @@ class CoffeePotEvent(TimeStampedModel):
     ]
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4)
     type = models.CharField(max_length=254, choices=EVENT_TYPES)
+    machine = models.ForeignKey('p2coffee.Machine', on_delete=models.SET_NULL, blank=True, null=True)
+
     slack_channel = models.CharField(max_length=64, null=True, blank=True)
     slack_ts = models.CharField(max_length=64, null=True, blank=True)
 
@@ -93,3 +96,28 @@ class CoffeePotEvent(TimeStampedModel):
         verbose_name_plural = _('Coffee pot events')
         index_together = ['created', 'modified']
         ordering = ['created']
+
+
+class Brew(TimeStampedModel):
+    started_event = models.ForeignKey(CoffeePotEvent, on_delete=models.CASCADE, related_name='brews_started')
+    finished_event = models.ForeignKey(CoffeePotEvent, on_delete=models.CASCADE, related_name='brews_finished')
+    brewer_slack_username = models.CharField(max_length=255)
+
+
+class BrewReaction(TimeStampedModel):
+    brew = models.ForeignKey(Brew, on_delete=models.CASCADE)
+    reaction = models.CharField(max_length=255)
+    is_custom_reaction = models.BooleanField(default=False, blank=True)
+    slack_username = models.CharField(max_length=255)
+
+
+# class MachineStatus(models.TextChoices):
+#     BREWING = 'BREWING', 'Brewing'
+#     IDLE = 'IDLE', 'Idle'
+
+
+class Machine(TimeStampedModel):
+    name = models.CharField(max_length=255)
+    device_name = models.CharField(max_length=255)
+    volume = models.DecimalField(max_digits=4, decimal_places=2, default=1.25, blank=True)
+    # status = models.CharField(choices=MachineStatus.choices(), max_length=7, default=MachineStatus.IDLE.value)
