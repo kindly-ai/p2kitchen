@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django.templatetags.tz import localtime
 from django.utils.formats import date_format
-from django.utils.translation import ugettext_lazy as _
 
 from p2coffee.models import SensorEvent, CoffeePotEvent
 
@@ -20,7 +19,7 @@ class CoffeePotEventAdmin(admin.ModelAdmin):
         return format_datetime(obj.created)
 
     created_precise.admin_order_field = 'created'
-    created_precise.short_description = _('Created')
+    created_precise.short_description = 'Created'
 
 
 class SensorEventAdmin(admin.ModelAdmin):
@@ -34,7 +33,7 @@ class SensorEventAdmin(admin.ModelAdmin):
         return format_datetime(obj.created)
 
     created_precise.admin_order_field = 'created'
-    created_precise.short_description = _('Created')
+    created_precise.short_description = 'Created'
 
 
 admin.site.register(CoffeePotEvent, CoffeePotEventAdmin)

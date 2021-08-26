@@ -1,5 +1,4 @@
 """ https://docs.djangoproject.com/en/1.9/ref/settings/ """
-from django.utils.translation import ugettext_lazy as _
 from huey import RedisHuey
 from urllib.parse import urlparse
 import dj_database_url
@@ -94,8 +93,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 LANGUAGES = [
-    ('en', _('English')),
-    ('nb', _('Norwegian')),
+    ('en', 'English'),
 ]
 LANGUAGE_CODE = os.getenv('LANGUAGE_CODE', 'en')
 TIME_ZONE = os.getenv('TIME_ZONE', 'UTC')
