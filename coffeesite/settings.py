@@ -117,6 +117,8 @@ STATICFILES_DIRS = [
 ]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
 # Huey worker
 rconn = urlparse(os.environ.get('REDISTOGO_URL', 'redis://localhost:6379'))
 rconn = {'host': rconn.hostname, 'port': rconn.port, 'password': rconn.password}
@@ -129,8 +131,6 @@ SLACK_CHANNEL = os.getenv('SLACK_CHANNEL', '#im-a-coffeepot')
 SLACK_BOT_USERNAME = os.getenv('SLACK_BOT_USERNAME', 'Kaffetrakteren')
 SLACK_BOT_ICON_URL = os.getenv('SLACK_BOT_ICON_URL', 'https://p2coffee.comicsans.no/static/images/icon.jpg')
 
-# Lifx
-LIFX_TOKEN = ''
 
 # Coffee camera settings
 COFFEE_CAMERA_URL = os.getenv('COFFEE_CAMERA_URL', 'http://127.0.0.1:8001/cam/1')
