@@ -9,9 +9,9 @@ import uuid
 
 
 class SensorName(models.TextChoices):
-    NAME_SWITCH = 'power-switch', 'Power switched'
-    NAME_METER_HAS_CHANGED = 'power-meter-has-changed', 'Power meter changed'
-    NAME_METER = 'power-meter', 'Power metered'
+    SWITCH = 'power-switch', 'Power switched'
+    METER_HAS_CHANGED = 'power-meter-has-changed', 'Power meter changed'
+    METER = 'power-meter', 'Power metered'
 
 
 class SensorEvent(TimeStampedModel):

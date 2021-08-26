@@ -16,12 +16,12 @@ def on_new_meter(sensor_event: SensorEvent):
     cpe = None
     current_value = float(sensor_event.value)
 
-    if sensor_event.name != SensorName.NAME_METER_HAS_CHANGED.value:
+    if sensor_event.name != SensorName.METER_HAS_CHANGED.value:
         return  # Only changes are significant, ignore normal readings
 
     # Get previous event value
     change_events = SensorEvent.objects.filter(
-            name=SensorName.NAME_METER_HAS_CHANGED.value,
+            name=SensorName.METER_HAS_CHANGED.value,
             created__lt=sensor_event.created,
             id=sensor_event.id
     ).order_by('created')

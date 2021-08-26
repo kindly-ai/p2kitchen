@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from p2coffee.forms import SensorEventForm
-from p2coffee.models import SensorEvent, CoffeePotEvent
+from p2coffee.models import SensorEvent, CoffeePotEvent, SensorName
 from p2coffee.tasks import on_new_meter
 
 
@@ -50,7 +50,7 @@ class StatsView(TemplateView):
         return context
 
     def _get_last_power_state(self):
-        return SensorEvent.objects.filter(name=SensorEvent.NAME_SWITCH).last()
+        return SensorEvent.objects.filter(name=SensorName.SWITCH.value).last()
 
     def _get_last_coffee_event(self):
         return CoffeePotEvent.objects.last()
@@ -62,7 +62,7 @@ class StatsEvents(APIView):
         return Response(self._get_events())
 
     def _get_events(self):
-        events = SensorEvent.objects.filter(name=SensorEvent.NAME_METER_HAS_CHANGED).values('name', 'value', 'created')
+        events = SensorEvent.objects.filter(name=SensorName.METER_HAS_CHANGED.value).values('name', 'value', 'created')
 
         # Group the data
         keyfunc = lambda x: x['name']
