@@ -1,36 +1,11 @@
-from braces.views import CsrfExemptMixin
-from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.urls import reverse
-from django.utils.translation import ugettext as _
-from django.views.generic import View, TemplateView
+from django.views.generic import TemplateView
 from itertools import groupby
 
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from p2coffee.forms import SensorEventForm
 from p2coffee.models import SensorEvent, CoffeePotEvent, SensorName
-from p2coffee.tasks import on_new_meter
-
-
-class CreateSensorEventView(View):
-    """
-        Logs a sensor event and runs on_new_meter task
-
-        EXAMPLE request:
-            GET /event/log/?name=power-meter-has-changed&id=ZWayVDev_zway_2-0-49-4&value=4.6
-    """
-    def get(self, request, *args, **kwargs):
-        form = SensorEventForm(request.GET)
-
-        if not form.is_valid():
-            return HttpResponseBadRequest('Curse you coffeepot!')
-
-        event = form.save()
-
-        on_new_meter(event)
-
-        return HttpResponse('Thank you coffepot!')
 
 
 class StatsView(TemplateView):
@@ -79,12 +54,3 @@ class StatsEvents(APIView):
     def _events_to_highcharts_format(self, events):
         return list(map(lambda e: [e['created'].timestamp() * 1000, float(e['value'])], events))
 
-
-class KindlyOutgoingView(CsrfExemptMixin, View):
-    def post(self, request):
-        last_event = CoffeePotEvent.objects.last()
-        brewing_status = _('I\'m a coffee pot!')
-        if last_event:
-            brewing_status = last_event.as_slack_text()
-
-        return JsonResponse({'reply': brewing_status})

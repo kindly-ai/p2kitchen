@@ -17,7 +17,7 @@ def _dispatch(method, **data):
         **data
     })
 
-    url = url_base + '{}?{}'.format(method, params)
+    url = f'{settings.SLACK_API_URL_BASE}{method}?{params}'
     logger.debug("Sending request to slack with data: %s", json.dumps(data))
 
     response = requests.post(url)
