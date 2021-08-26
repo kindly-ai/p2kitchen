@@ -111,13 +111,13 @@ class BrewReaction(TimeStampedModel):
     slack_username = models.CharField(max_length=255)
 
 
-# class MachineStatus(models.TextChoices):
-#     BREWING = 'BREWING', 'Brewing'
-#     IDLE = 'IDLE', 'Idle'
+class MachineStatus(models.TextChoices):
+    BREWING = 'BREWING', 'Brewing'
+    IDLE = 'IDLE', 'Idle'
 
 
 class Machine(TimeStampedModel):
     name = models.CharField(max_length=255)
     device_name = models.CharField(max_length=255)
     volume = models.DecimalField(max_digits=4, decimal_places=2, default=1.25, blank=True)
-    # status = models.CharField(choices=MachineStatus.choices(), max_length=7, default=MachineStatus.IDLE.value)
+    status = models.CharField(choices=MachineStatus.choices, max_length=7, default=MachineStatus.IDLE.value)
