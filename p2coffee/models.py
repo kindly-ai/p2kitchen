@@ -69,7 +69,7 @@ class CoffeePotEvent(TimeStampedModel):
         return duration
 
     def __str__(self):
-        return str(getattr(CoffeePotEventType, self.type).label)
+        return self.get_type_display()
 
     class Meta:
         verbose_name = 'Coffee pot event'
