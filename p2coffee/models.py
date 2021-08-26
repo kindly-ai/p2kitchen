@@ -101,7 +101,8 @@ class CoffeePotEvent(TimeStampedModel):
 class Brew(TimeStampedModel):
     started_event = models.ForeignKey(CoffeePotEvent, on_delete=models.CASCADE, related_name='brews_started')
     finished_event = models.ForeignKey(CoffeePotEvent, on_delete=models.CASCADE, related_name='brews_finished')
-    brewer_slack_username = models.CharField(max_length=255)
+    machine = models.ForeignKey('p2coffee.Machine', on_delete=models.CASCADE)
+    brewer_slack_username = models.CharField(max_length=255, blank=True, default='')
 
 
 class BrewReaction(TimeStampedModel):
