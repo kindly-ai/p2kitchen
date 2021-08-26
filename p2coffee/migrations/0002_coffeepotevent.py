@@ -10,22 +10,46 @@ import uuid
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('p2coffee', '0001_initial'),
+        ("p2coffee", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='CoffeePotEvent',
+            name="CoffeePotEvent",
             fields=[
-                ('created', django_extensions.db.fields.CreationDateTimeField(auto_now_add=True, verbose_name='created')),
-                ('modified', django_extensions.db.fields.ModificationDateTimeField(auto_now=True, verbose_name='modified')),
-                ('uuid', models.UUIDField(default=uuid.uuid4, primary_key=True, serialize=False)),
-                ('type', models.CharField(choices=[('brew_started', 'Brewing started'), ('brew_finished', 'Brewing finished')], max_length=254)),
+                (
+                    "created",
+                    django_extensions.db.fields.CreationDateTimeField(
+                        auto_now_add=True, verbose_name="created"
+                    ),
+                ),
+                (
+                    "modified",
+                    django_extensions.db.fields.ModificationDateTimeField(
+                        auto_now=True, verbose_name="modified"
+                    ),
+                ),
+                (
+                    "uuid",
+                    models.UUIDField(
+                        default=uuid.uuid4, primary_key=True, serialize=False
+                    ),
+                ),
+                (
+                    "type",
+                    models.CharField(
+                        choices=[
+                            ("brew_started", "Brewing started"),
+                            ("brew_finished", "Brewing finished"),
+                        ],
+                        max_length=254,
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
-                'ordering': ('-modified', '-created'),
-                'get_latest_by': 'modified',
+                "abstract": False,
+                "ordering": ("-modified", "-created"),
+                "get_latest_by": "modified",
             },
         ),
     ]
