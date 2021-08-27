@@ -30,9 +30,7 @@ def on_new_meter(sensor_event: SensorEvent):
 
     # Compare current with previous and check if thresholds have been crossed
     if current_value >= threshold_started > previous_value:
-        cpe = CoffeePotEvent.objects.create(
-            type=CoffeePotEventType.BREWING_STARTED.value
-        )
+        cpe = CoffeePotEvent.objects.create(type=CoffeePotEventType.BREWING_STARTED.value)
         start_brewing(cpe)
     elif current_value <= threshold_finished < previous_value:
         CoffeePotEvent.objects.create(type=CoffeePotEventType.BREWING_FINISHED.value)
@@ -61,9 +59,7 @@ def update_progress(event_pk):
         return
 
     message = __create_message_prefix(event)
-    newer_events = CoffeePotEvent.objects.filter(created__gt=event.created).order_by(
-        "created"
-    )
+    newer_events = CoffeePotEvent.objects.filter(created__gt=event.created).order_by("created")
     if len(newer_events) == 0:
         duration = (timezone.now() - event.created).seconds
         avg_brewtime = settings.BREWTIME_AVG_MINUTES * 60

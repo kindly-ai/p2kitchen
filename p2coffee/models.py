@@ -19,9 +19,7 @@ class SensorEvent(TimeStampedModel):
     name = models.CharField(max_length=254, choices=SensorName.choices)
     value = models.CharField(max_length=254)
     id = models.CharField(max_length=254)
-    machine = models.ForeignKey(
-        "p2coffee.Machine", on_delete=models.SET_NULL, blank=True, null=True
-    )
+    machine = models.ForeignKey("p2coffee.Machine", on_delete=models.SET_NULL, blank=True, null=True)
 
     def __str__(self):
         return str(self.uuid)
@@ -41,9 +39,7 @@ class CoffeePotEventType(models.TextChoices):
 class CoffeePotEvent(TimeStampedModel):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4)
     type = models.CharField(max_length=254, choices=CoffeePotEventType.choices)
-    machine = models.ForeignKey(
-        "p2coffee.Machine", on_delete=models.SET_NULL, blank=True, null=True
-    )
+    machine = models.ForeignKey("p2coffee.Machine", on_delete=models.SET_NULL, blank=True, null=True)
 
     slack_channel = models.CharField(max_length=64, null=True, blank=True)
     slack_ts = models.CharField(max_length=64, null=True, blank=True)
@@ -52,9 +48,7 @@ class CoffeePotEvent(TimeStampedModel):
         return self.as_slack_text()
 
     def as_slack_text(self):
-        return "{} {}{}".format(
-            self.__str__(), naturaltime(self.created), self._get_duration()
-        )
+        return "{} {}{}".format(self.__str__(), naturaltime(self.created), self._get_duration())
 
     def _get_duration(self):
         duration = ""
@@ -65,9 +59,7 @@ class CoffeePotEvent(TimeStampedModel):
             duration = f" and should be done {expected_brewtime}"
 
         elif self.type == CoffeePotEventType.BREWING_FINISHED.value:
-            events_started = CoffeePotEvent.objects.filter(
-                type=CoffeePotEventType.BREWING_STARTED.value
-            )
+            events_started = CoffeePotEvent.objects.filter(type=CoffeePotEventType.BREWING_STARTED.value)
             last_started_event = events_started.exclude(uuid=self.uuid).last()
 
             if last_started_event:
@@ -87,12 +79,8 @@ class CoffeePotEvent(TimeStampedModel):
 
 
 class Brew(TimeStampedModel):
-    started_event = models.ForeignKey(
-        CoffeePotEvent, on_delete=models.CASCADE, related_name="brews_started"
-    )
-    finished_event = models.ForeignKey(
-        CoffeePotEvent, on_delete=models.CASCADE, related_name="brews_finished"
-    )
+    started_event = models.ForeignKey(CoffeePotEvent, on_delete=models.CASCADE, related_name="brews_started")
+    finished_event = models.ForeignKey(CoffeePotEvent, on_delete=models.CASCADE, related_name="brews_finished")
     machine = models.ForeignKey("p2coffee.Machine", on_delete=models.CASCADE)
     brewer_slack_username = models.CharField(max_length=255, blank=True, default="")
 
@@ -112,9 +100,5 @@ class MachineStatus(models.TextChoices):
 class Machine(TimeStampedModel):
     name = models.CharField(max_length=255)
     device_name = models.CharField(max_length=255)
-    volume = models.DecimalField(
-        max_digits=4, decimal_places=2, default=1.25, blank=True
-    )
-    status = models.CharField(
-        choices=MachineStatus.choices, max_length=7, default=MachineStatus.IDLE.value
-    )
+    volume = models.DecimalField(max_digits=4, decimal_places=2, default=1.25, blank=True)
+    status = models.CharField(choices=MachineStatus.choices, max_length=7, default=MachineStatus.IDLE.value)

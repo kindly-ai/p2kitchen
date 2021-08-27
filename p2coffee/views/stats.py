@@ -38,22 +38,16 @@ class StatsEvents(APIView):
         return Response(self._get_events())
 
     def _get_events(self):
-        events = SensorEvent.objects.filter(
-            name=SensorName.METER_HAS_CHANGED.value
-        ).values("name", "value", "created")
+        events = SensorEvent.objects.filter(name=SensorName.METER_HAS_CHANGED.value).values("name", "value", "created")
 
         # Group the data
         keyfunc = lambda x: x["name"]
         event_groups = []
         data = sorted(events, key=keyfunc)
         for key, group in groupby(data, keyfunc):
-            event_groups.append(
-                {"name": key, "data": self._events_to_highcharts_format(group)}
-            )
+            event_groups.append({"name": key, "data": self._events_to_highcharts_format(group)})
 
         return event_groups
 
     def _events_to_highcharts_format(self, events):
-        return list(
-            map(lambda e: [e["created"].timestamp() * 1000, float(e["value"])], events)
-        )
+        return list(map(lambda e: [e["created"].timestamp() * 1000, float(e["value"])], events))

@@ -1,28 +1,27 @@
 import json
 import logging
+
 import requests
 import urllib.parse
 from django.conf import settings
-
+from rest_framework.exceptions import ValidationError
+from slack_sdk.signature import SignatureVerifier
 
 logger = logging.getLogger(__name__)
 
+SLACK_API_URL_BASE = "https://slack.com/api/"
+
 
 def _dispatch(method, **data):
-    url_base = settings.SLACK_API_URL_BASE
-    params = urllib.parse.urlencode(
-        {
-            "token": settings.SLACK_API_TOKEN,
-            "username": settings.SLACK_BOT_USERNAME,
-            "icon_url": settings.SLACK_BOT_ICON_URL,
-            **data,
-        }
-    )
+    headers = {
+        "Authorization": f"Bearer {settings.SLACK_API_TOKEN}",
+        "Content-type": "application/json; charset=utf-8",
+    }
 
-    url = f"{settings.SLACK_API_URL_BASE}{method}?{params}"
+    url = f"{SLACK_API_URL_BASE}{method}"
     logger.debug("Sending request to slack with data: %s", json.dumps(data))
 
-    response = requests.post(url)
+    response = requests.post(url, headers=headers, json=data)
     content = json.loads(response.content.decode())
 
     error = content.get("error")
@@ -39,11 +38,8 @@ def _dispatch(method, **data):
 
 
 def _upload(method, f, channels=None, **data):
-    url_base = settings.SLACK_API_URL_BASE
     params = {
         "token": settings.SLACK_API_TOKEN,
-        "username": settings.SLACK_BOT_USERNAME,
-        "icon_url": settings.SLACK_BOT_ICON_URL,
     }
 
     if channels:
@@ -55,7 +51,7 @@ def _upload(method, f, channels=None, **data):
 
     params = urllib.parse.urlencode(params)
 
-    url = url_base + "{}?{}".format(method, params)
+    url = f"{SLACK_API_URL_BASE}{method}?{params}"
     logger.debug("Uploading file to slack.")
 
     response = requests.post(url, files={"file": ("current.jpg", f)})
@@ -74,8 +70,8 @@ def _upload(method, f, channels=None, **data):
     return content
 
 
-def channels_list():
-    return _dispatch("channels.list")
+def conversations_list():
+    return _dispatch("conversations.list")
 
 
 def channels_info(channel):
@@ -86,7 +82,7 @@ def channels_join(channel):
     return _dispatch("channels.join", channel=channel)
 
 
-def chat_post_message(channel, text=None, attachments=None):
+def chat_post_message(channel, blocks=None, text=None, attachments=None):
     data = {
         "channel": channel,
     }
@@ -96,6 +92,9 @@ def chat_post_message(channel, text=None, attachments=None):
 
     if attachments is not None:
         data["attachments"] = attachments
+
+    if blocks is not None:
+        data["blocks"] = blocks
 
     return _dispatch("chat.postMessage", **data)
 
@@ -119,9 +118,7 @@ def chat_delete(channel, timestamp):
     return _dispatch("chat.delete", **data)
 
 
-def files_upload(
-    f, filename=None, filetype=None, title=None, initial_comment=None, channels=None
-):
+def files_upload(f, filename=None, filetype=None, title=None, initial_comment=None, channels=None):
     return _upload(
         "files.upload",
         f,
@@ -131,3 +128,10 @@ def files_upload(
         initial_comment=initial_comment,
         channels=channels,
     )
+
+
+def verify_signature(request):
+    """https://api.slack.com/authentication/verifying-requests-from-slack"""
+    verifier = SignatureVerifier(settings.SLACK_SIGNING_SECRET)
+    if not verifier.is_valid_request(request.body, request.headers):
+        raise ValidationError("Invalid slack signature")

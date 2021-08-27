@@ -26,15 +26,11 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "created",
-                    django_extensions.db.fields.CreationDateTimeField(
-                        auto_now_add=True, verbose_name="created"
-                    ),
+                    django_extensions.db.fields.CreationDateTimeField(auto_now_add=True, verbose_name="created"),
                 ),
                 (
                     "modified",
-                    django_extensions.db.fields.ModificationDateTimeField(
-                        auto_now=True, verbose_name="modified"
-                    ),
+                    django_extensions.db.fields.ModificationDateTimeField(auto_now=True, verbose_name="modified"),
                 ),
                 (
                     "brewer_slack_username",
@@ -68,23 +64,17 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "created",
-                    django_extensions.db.fields.CreationDateTimeField(
-                        auto_now_add=True, verbose_name="created"
-                    ),
+                    django_extensions.db.fields.CreationDateTimeField(auto_now_add=True, verbose_name="created"),
                 ),
                 (
                     "modified",
-                    django_extensions.db.fields.ModificationDateTimeField(
-                        auto_now=True, verbose_name="modified"
-                    ),
+                    django_extensions.db.fields.ModificationDateTimeField(auto_now=True, verbose_name="modified"),
                 ),
                 ("name", models.CharField(max_length=255)),
                 ("device_name", models.CharField(max_length=255)),
                 (
                     "volume",
-                    models.DecimalField(
-                        blank=True, decimal_places=2, default=1.25, max_digits=4
-                    ),
+                    models.DecimalField(blank=True, decimal_places=2, default=1.25, max_digits=4),
                 ),
                 (
                     "status",
@@ -126,24 +116,18 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "created",
-                    django_extensions.db.fields.CreationDateTimeField(
-                        auto_now_add=True, verbose_name="created"
-                    ),
+                    django_extensions.db.fields.CreationDateTimeField(auto_now_add=True, verbose_name="created"),
                 ),
                 (
                     "modified",
-                    django_extensions.db.fields.ModificationDateTimeField(
-                        auto_now=True, verbose_name="modified"
-                    ),
+                    django_extensions.db.fields.ModificationDateTimeField(auto_now=True, verbose_name="modified"),
                 ),
                 ("reaction", models.CharField(max_length=255)),
                 ("is_custom_reaction", models.BooleanField(blank=True, default=False)),
                 ("slack_username", models.CharField(max_length=255)),
                 (
                     "brew",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, to="p2coffee.brew"
-                    ),
+                    models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="p2coffee.brew"),
                 ),
             ],
             options={
@@ -154,9 +138,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="brew",
             name="machine",
-            field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE, to="p2coffee.machine"
-            ),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="p2coffee.machine"),
         ),
         migrations.AddField(
             model_name="brew",

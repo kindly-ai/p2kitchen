@@ -82,9 +82,7 @@ if os.getenv("DATABASE_URL"):
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"
-    },
+    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
@@ -120,13 +118,9 @@ rconn = {"host": rconn.hostname, "port": rconn.port, "password": rconn.password}
 HUEY = RedisHuey("coffeesite", result_store=False, **rconn)
 
 # Slack
-SLACK_API_URL_BASE = "https://slack.com/api/"
 SLACK_API_TOKEN = os.getenv("SLACK_API_TOKEN")
-SLACK_CHANNEL = os.getenv("SLACK_CHANNEL", "#im-a-coffeepot")
-SLACK_BOT_USERNAME = os.getenv("SLACK_BOT_USERNAME", "Kaffetrakteren")
-SLACK_BOT_ICON_URL = os.getenv(
-    "SLACK_BOT_ICON_URL", "https://p2coffee.comicsans.no/static/images/icon.jpg"
-)
+SLACK_CHANNEL = os.getenv("SLACK_CHANNEL", "#kitchen-dev")
+SLACK_SIGNING_SECRET = os.getenv("SLACK_SECRET")
 
 
 # Brewing settings
