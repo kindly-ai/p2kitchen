@@ -1,0 +1,70 @@
+.Arrow-icon {
+  position: relative;
+  top: -2px;
+  padding-left: 4px;
+}
+.StatsTable th {
+  width: 100%;
+  padding: 4px;
+  font-weight: normal;
+  text-align: left;
+}
+
+.StatsTable thead th {
+  border-bottom: 2px solid #f3f3f4;
+}
+
+.StatsTable td {
+  padding: 4px;
+  font-size: 0.9rem;
+  vertical-align: middle;
+}
+
+.StatsTable th:first-child,
+.StatsTable td:first-child {
+  padding-left: 0;
+}
+
+.StatsTable-machine-avatar {
+  width: 64px;
+  height: 64px;
+  margin-right: 8px;
+  border-radius: 4px;
+  vertical-align: middle;
+}
+
+.StatsTable-info {
+  min-width: 100px;
+  color: #fa4d1e;
+}
+.Brewers td {
+  padding: 8px;
+}
+
+.Brewers td:first-child {
+  padding-left: 0;
+}
+
+.BrewerItem {
+  font-size: 0.9rem;
+}
+
+.Brewer {
+  overflow: hidden;
+  max-width: 224px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.Brewer-avatar {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #f3f3f4;
+  margin-right: 8px;
+  border-radius: 50% 50%;
+  vertical-align: middle;
+}
+
+.StatsByPeriod h3 {
+  margin: 16px 0;
+}
