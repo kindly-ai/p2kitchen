@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     "django_extensions",
     "huey.contrib.djhuey",
     "rest_framework",
+    "strawberry.django",
 ]
 
 INSTALLED_APPS += [
