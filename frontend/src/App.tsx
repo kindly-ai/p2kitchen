@@ -1,11 +1,34 @@
+import { useQuery, gql } from "@apollo/client";
 import React, { ReactElement } from "react";
 
 import StatsByPeriod from "./StatsByPeriod";
 import bg from "./assets/bg.jpg";
 import "./App.css";
 
+const GET_MACHINES = gql`
+  {
+    machines {
+      id
+      name
+      status
+      lastBrew {
+        id
+        brewerSlackUsername
+        reactions {
+          id
+          reaction
+        }
+      }
+    }
+  }
+`;
+
 const App = (): ReactElement => {
   const MachineBrewProgress = 71;
+  const { data, loading, error } = useQuery(GET_MACHINES);
+  console.log("datas", data, "error", error);
+  if (loading) return <p>Loading...</p>;
+
   return (
     <div className="App">
       <main className="App-container">

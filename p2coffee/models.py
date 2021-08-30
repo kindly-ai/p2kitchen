@@ -81,12 +81,12 @@ class CoffeePotEvent(TimeStampedModel):
 class Brew(TimeStampedModel):
     started_event = models.ForeignKey(CoffeePotEvent, on_delete=models.CASCADE, related_name="brews_started")
     finished_event = models.ForeignKey(CoffeePotEvent, on_delete=models.CASCADE, related_name="brews_finished")
-    machine = models.ForeignKey("p2coffee.Machine", on_delete=models.CASCADE)
+    machine = models.ForeignKey("p2coffee.Machine", on_delete=models.CASCADE, related_name="brews")
     brewer_slack_username = models.CharField(max_length=255, blank=True, default="")
 
 
 class BrewReaction(TimeStampedModel):
-    brew = models.ForeignKey(Brew, on_delete=models.CASCADE)
+    brew = models.ForeignKey(Brew, on_delete=models.CASCADE, related_name="reactions")
     reaction = models.CharField(max_length=255)
     is_custom_reaction = models.BooleanField(default=False, blank=True)
     slack_username = models.CharField(max_length=255)
@@ -102,3 +102,6 @@ class Machine(TimeStampedModel):
     device_name = models.CharField(max_length=255)
     volume = models.DecimalField(max_digits=4, decimal_places=2, default=1.25, blank=True)
     status = models.CharField(choices=MachineStatus.choices, max_length=7, default=MachineStatus.IDLE.value)
+
+    def __str__(self):
+        return self.name

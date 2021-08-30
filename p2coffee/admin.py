@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.templatetags.tz import localtime
 from django.utils.formats import date_format
 
-from p2coffee.models import SensorEvent, CoffeePotEvent
+from p2coffee.models import SensorEvent, CoffeePotEvent, Brew, BrewReaction, Machine
 
 
 def format_datetime(dt, dt_format="Y-m-d H:i:s"):
@@ -36,5 +36,14 @@ class SensorEventAdmin(admin.ModelAdmin):
     created_precise.short_description = "Created"
 
 
+class MachineAdmin(admin.ModelAdmin):
+    list_display = ["name", "device_name", "status"]
+    list_filter = ["status"]
+
+
 admin.site.register(CoffeePotEvent, CoffeePotEventAdmin)
 admin.site.register(SensorEvent, SensorEventAdmin)
+
+admin.site.register(Machine, MachineAdmin)
+admin.site.register(Brew)
+admin.site.register(BrewReaction)

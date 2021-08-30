@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     "huey.contrib.djhuey",
     "rest_framework",
     "strawberry.django",
+    "corsheaders",
 ]
 
 INSTALLED_APPS += [
@@ -40,6 +41,7 @@ INSTALLED_APPS += [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -112,6 +114,12 @@ STATICFILES_DIRS = [
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
+
+CORS_ALLOWED_ORIGINS = [
+    "https://kindly-kitchen.netlify.com",
+    "http://localhost:3000",
+    "http://localhost:8000",
+]
 
 # Huey worker
 rconn = urlparse(os.environ.get("REDISTOGO_URL", "redis://localhost:6379"))

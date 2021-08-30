@@ -1,6 +1,10 @@
 import strawberry
+from asgiref.sync import sync_to_async
 from strawberry.django import auto
-from typing import List
+from typing import List, Optional
+
+from strawberry.types import Info
+
 from . import models
 
 
@@ -24,4 +28,16 @@ class Brew:
 class Machine:
     id: auto
     name: auto
-    brews: List[Brew]
+    status: auto
+    last_brew: Brew
+
+    @strawberry.field
+    async def last_brew(self, info: Info) -> Optional[Brew]:
+        print(self.id)
+
+        def _get_last_brew(machine_id):
+            return models.Brew.objects.filter(machine_id=machine_id).order_by("-modified").last()
+
+        get_last_brew = sync_to_async(_get_last_brew)
+
+        return await get_last_brew(self.id)

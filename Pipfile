@@ -19,6 +19,7 @@ slack-sdk = "*"
 strawberry-graphql = "*"
 uvicorn = "*"
 strawberry-graphql-django = "*"
+django-cors-headers = "*"
 
 [dev-packages]
 black = "==21.7b0"
