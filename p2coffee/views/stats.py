@@ -5,27 +5,21 @@ from itertools import groupby
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from p2coffee.models import SensorEvent, CoffeePotEvent, SensorName
+from p2coffee.models import SensorEvent, CoffeePotEvent
 
 
 class StatsView(TemplateView):
     template_name = "p2coffee/stats.html"
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        context.update(
-            {
-                "last_state": self._get_last_power_state(),
-                "last_brew": self._get_last_coffee_event(),
-                "urls": {"stats-events": reverse("stats-events")},
-            }
-        )
-
-        return context
+        return {
+            "last_state": self._get_last_power_state(),
+            "last_brew": self._get_last_coffee_event(),
+            "urls": {"stats-events": reverse("stats-events")},
+        } | super().get_context_data(**kwargs)
 
     def _get_last_power_state(self):
-        return SensorEvent.objects.filter(name=SensorName.SWITCH.value).last()
+        return SensorEvent.objects.filter(name=SensorEvent.Name.SWITCH.value).last()
 
     def _get_last_coffee_event(self):
         return CoffeePotEvent.objects.last()
@@ -38,7 +32,9 @@ class StatsEvents(APIView):
         return Response(self._get_events())
 
     def _get_events(self):
-        events = SensorEvent.objects.filter(name=SensorName.METER_HAS_CHANGED.value).values("name", "value", "created")
+        events = SensorEvent.objects.filter(name=SensorEvent.Name.METER_HAS_CHANGED.value).values(
+            "name", "value", "created"
+        )
 
         # Group the data
         keyfunc = lambda x: x["name"]

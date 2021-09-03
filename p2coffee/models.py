@@ -3,20 +3,23 @@ from datetime import timedelta
 from django.conf import settings
 from django.contrib.humanize.templatetags.humanize import naturaltime
 from django.db import models
+from django.templatetags.static import static
+from django.utils import timezone
 from django.utils.timesince import timesince
 from django_extensions.db.models import TimeStampedModel
 import uuid
 
-
-class SensorName(models.TextChoices):
-    SWITCH = "power-switch", "Power switched"
-    METER_HAS_CHANGED = "power-meter-has-changed", "Power meter changed"
-    METER = "power-meter", "Power metered"
+from p2coffee.emojis import EMOJI_MAP
 
 
 class SensorEvent(TimeStampedModel):
+    class Name(models.TextChoices):
+        SWITCH = "power-switch", "Power switched"
+        METER_HAS_CHANGED = "power-meter-has-changed", "Power meter changed"
+        METER = "power-meter", "Power metered"
+
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4)
-    name = models.CharField(max_length=254, choices=SensorName.choices)
+    name = models.CharField(max_length=254, choices=Name.choices)
     value = models.CharField(max_length=254)
     id = models.CharField(max_length=254)
     machine = models.ForeignKey("p2coffee.Machine", on_delete=models.SET_NULL, blank=True, null=True)
@@ -31,14 +34,13 @@ class SensorEvent(TimeStampedModel):
         ordering = ["created"]
 
 
-class CoffeePotEventType(models.TextChoices):
-    BREWING_STARTED = "brew_started", "I started brewing"
-    BREWING_FINISHED = "brew_finished", "I'm done brewing"
-
-
 class CoffeePotEvent(TimeStampedModel):
+    class EventType(models.TextChoices):
+        BREWING_STARTED = "brew_started", "I started brewing"
+        BREWING_FINISHED = "brew_finished", "I'm done brewing"
+
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4)
-    type = models.CharField(max_length=254, choices=CoffeePotEventType.choices)
+    type = models.CharField(max_length=254, choices=EventType.choices)
     machine = models.ForeignKey("p2coffee.Machine", on_delete=models.SET_NULL, blank=True, null=True)
 
     slack_channel = models.CharField(max_length=64, null=True, blank=True)
@@ -53,13 +55,13 @@ class CoffeePotEvent(TimeStampedModel):
     def _get_duration(self):
         duration = ""
 
-        if self.type == CoffeePotEventType.BREWING_STARTED.value:
+        if self.type == CoffeePotEvent.EventType.BREWING_STARTED.value:
             brew_time = timedelta(minutes=settings.BREWTIME_AVG_MINUTES)
             expected_brewtime = naturaltime(self.created + brew_time)
             duration = f" and should be done {expected_brewtime}"
 
-        elif self.type == CoffeePotEventType.BREWING_FINISHED.value:
-            events_started = CoffeePotEvent.objects.filter(type=CoffeePotEventType.BREWING_STARTED.value)
+        elif self.type == CoffeePotEvent.EventType.BREWING_FINISHED.value:
+            events_started = CoffeePotEvent.objects.filter(type=CoffeePotEvent.EventType.BREWING_STARTED.value)
             last_started_event = events_started.exclude(uuid=self.uuid).last()
 
             if last_started_event:
@@ -79,10 +81,33 @@ class CoffeePotEvent(TimeStampedModel):
 
 
 class Brew(TimeStampedModel):
+    class Status(models.TextChoices):
+        BREWING = "brewing", "Brewing"
+        FINISHED = "finished", "Finished"
+
     started_event = models.ForeignKey(CoffeePotEvent, on_delete=models.CASCADE, related_name="brews_started")
-    finished_event = models.ForeignKey(CoffeePotEvent, on_delete=models.CASCADE, related_name="brews_finished")
+    finished_event = models.ForeignKey(
+        CoffeePotEvent, on_delete=models.CASCADE, related_name="brews_finished", blank=True, null=True
+    )
+    status = models.CharField(choices=Status.choices, max_length=8, default=Status.BREWING.value)
     machine = models.ForeignKey("p2coffee.Machine", on_delete=models.CASCADE, related_name="brews")
     brewer_slack_username = models.CharField(max_length=255, blank=True, default="")
+
+    def __str__(self):
+        return self.get_status_display()
+
+    @property
+    def progress(self):
+        if self.finished_event:
+            return 100
+
+        seconds_elapsed = (timezone.now() - self.started_event.created).seconds
+        avg_brewtime = settings.BREWTIME_AVG_SECONDS
+
+        if seconds_elapsed > avg_brewtime:
+            return 100
+
+        return int(100 * (seconds_elapsed / avg_brewtime))
 
 
 class BrewReaction(TimeStampedModel):
@@ -91,17 +116,30 @@ class BrewReaction(TimeStampedModel):
     is_custom_reaction = models.BooleanField(default=False, blank=True)
     slack_username = models.CharField(max_length=255)
 
+    @property
+    def emoji(self):
+        if not self.reaction:
+            return ""
+        return EMOJI_MAP.get(self.reaction, "")
 
-class MachineStatus(models.TextChoices):
-    BREWING = "brewing", "Brewing"
-    IDLE = "idle", "Idle"
+    def __str__(self):
+        return self.reaction
 
 
 class Machine(TimeStampedModel):
+    class Status(models.TextChoices):
+        BREWING = "brewing", "Brewing"
+        IDLE = "idle", "Idle"
+
     name = models.CharField(max_length=255)
     device_name = models.CharField(max_length=255)
     volume = models.DecimalField(max_digits=4, decimal_places=2, default=1.25, blank=True)
-    status = models.CharField(choices=MachineStatus.choices, max_length=7, default=MachineStatus.IDLE.value)
+    status = models.CharField(choices=Status.choices, max_length=7, default=Status.IDLE.value)
+    avatar_path = models.CharField(max_length=500, blank=True, default="")
+
+    @property
+    def avatar_url(self):
+        return static(self.avatar_path) if self.avatar_path else ""
 
     def __str__(self):
         return self.name

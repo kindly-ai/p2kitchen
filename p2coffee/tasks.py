@@ -3,7 +3,7 @@ from django.conf import settings
 from django.utils import timezone
 from huey.contrib.djhuey import db_task, task
 from p2coffee import slack
-from p2coffee.models import SensorEvent, CoffeePotEvent, CoffeePotEventType, SensorName
+from p2coffee.models import SensorEvent, CoffeePotEvent
 from p2coffee.utils import format_local_timestamp
 
 logger = logging.getLogger(__name__)
@@ -16,12 +16,12 @@ def on_new_meter(sensor_event: SensorEvent):
     cpe = None
     current_value = float(sensor_event.value)
 
-    if sensor_event.name != SensorName.METER_HAS_CHANGED.value:
+    if sensor_event.name != SensorEvent.Name.METER_HAS_CHANGED.value:
         return  # Only changes are significant, ignore normal readings
 
     # Get previous event value
     change_events = SensorEvent.objects.filter(
-        name=SensorName.METER_HAS_CHANGED.value,
+        name=SensorEvent.Name.METER_HAS_CHANGED.value,
         created__lt=sensor_event.created,
         id=sensor_event.id,
     ).order_by("created")
@@ -30,10 +30,10 @@ def on_new_meter(sensor_event: SensorEvent):
 
     # Compare current with previous and check if thresholds have been crossed
     if current_value >= threshold_started > previous_value:
-        cpe = CoffeePotEvent.objects.create(type=CoffeePotEventType.BREWING_STARTED.value)
+        cpe = CoffeePotEvent.objects.create(type=CoffeePotEvent.EventType.BREWING_STARTED.value)
         start_brewing(cpe)
     elif current_value <= threshold_finished < previous_value:
-        CoffeePotEvent.objects.create(type=CoffeePotEventType.BREWING_FINISHED.value)
+        CoffeePotEvent.objects.create(type=CoffeePotEvent.EventType.BREWING_FINISHED.value)
 
 
 @task()
@@ -79,7 +79,7 @@ def update_progress(event_pk):
         return
 
     for new_event in newer_events:
-        if new_event.type == CoffeePotEventType.BREWING_FINISHED.value:
+        if new_event.type == CoffeePotEvent.EventType.BREWING_FINISHED.value:
             t = format_local_timestamp(new_event.created, "%H:%M:%S")
             message = "{0}{1}".format(message, " and finished at {}!".format(t))
             slack.chat_update(event.slack_channel, event.slack_ts, message)
