@@ -1,12 +1,9 @@
 import { gql, useQuery } from "@apollo/client";
-import * as dayjs from "dayjs";
-import * as relativeTime from "dayjs/plugin/relativeTime";
+import { differenceInMinutes, formatDistanceToNow, parseISO } from "date-fns";
 import React, { ReactElement } from "react";
 
 import "./Today.css";
 import bg from "./assets/bg.jpg";
-
-dayjs.extend(relativeTime);
 
 const GET_MACHINES = gql`
   {
@@ -71,7 +68,7 @@ const StatusText = ({ brew }: StatusTextProps): ReactElement => {
 
   return (
     <>
-      Brewed <strong>{dayjs().to(modified, true) || ""}</strong> ago
+      Brewed <strong>{formatDistanceToNow(parseISO(modified)) || ""}</strong> ago
     </>
   );
 };
@@ -81,7 +78,7 @@ const BrewProgress = ({ brew }: BrewProgressProps): ReactElement | null => {
   if (!brew) return null;
 
   const { progress, modified } = brew;
-  const finishedJustNow = dayjs().diff(dayjs(modified), "minutes") <= 1;
+  const finishedJustNow = differenceInMinutes(new Date(), parseISO(modified)) <= 1;
   if (progress === 100 && !finishedJustNow) {
     return null;
   }
