@@ -160,9 +160,7 @@ class BrewReaction(TimeStampedModel):
 
     @property
     def emoji(self):
-        if not self.reaction:
-            return ""
-        return EMOJI_MAP.get(self.reaction, "")
+        return EMOJI_MAP.get(self.reaction, self.reaction)
 
     def __str__(self):
         return self.reaction

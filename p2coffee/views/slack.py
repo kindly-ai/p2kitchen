@@ -8,7 +8,8 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from p2coffee.models import Machine, SlackProfile, Brew, CoffeePotEvent
+from p2coffee.emojis import EMOJI_MAP
+from p2coffee.models import Machine, SlackProfile, Brew, BrewReaction
 from p2coffee import slack as slack_api
 from p2coffee.slack_messages import SELECT_BREWER_ACTION_PREFIX, SELECT_BREWER_BLOCK_ID, _format_selected_brewer_block
 
@@ -128,10 +129,19 @@ class SlackEventsView(APIView):
             user_profile.sync_profile()
             user_profile.save()
 
-        CoffeePotEvent.objects.filter()
-        Brew.objects.filter()
-        # TODO: Find related Brew using item.channel,item.ts tuple
-        # TODO: Add/Remove reaction to/from brew
+        # Find related Brew using item.channel,item.ts tuple
+        try:
+            brew = Brew.objects.get(slack_ts=event_data["item"]["ts"], slack_channel=event_data["item"]["ts"])
+        except Brew.DoesNotExist:
+            logger.error("Reacted to brew that does not exist")
+            return
+
+        if event_data["type"] == "reaction_added":
+            reaction = event_data["reaction"]
+            is_custom = reaction not in EMOJI_MAP
+            BrewReaction.objects.create(brew, reaction=reaction, is_custom_reaction=is_custom, user=user_profile)
+        elif event_data["type"] == "reaction_removed":
+            pass  # TODO: Remove reaction to/from brew
 
     def post(self, request):
         slack_api.verify_signature(request)

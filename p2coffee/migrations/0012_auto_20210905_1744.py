@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('p2coffee', '0011_auto_20210905_1712'),
+        ("p2coffee", "0011_auto_20210905_1712"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='machine',
-            name='device_name',
+            model_name="machine",
+            name="device_name",
             field=models.CharField(max_length=255, unique=True),
         ),
         migrations.AlterField(
-            model_name='sensorevent',
-            name='id',
-            field=models.CharField(help_text='Device ID', max_length=254),
+            model_name="sensorevent",
+            name="id",
+            field=models.CharField(help_text="Device ID", max_length=254),
         ),
     ]
