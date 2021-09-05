@@ -141,7 +141,7 @@ class SlackEventsView(APIView):
             is_custom = reaction not in EMOJI_MAP
             BrewReaction.objects.create(brew, reaction=reaction, is_custom_reaction=is_custom, user=user_profile)
         elif event_data["type"] == "reaction_removed":
-            pass  # TODO: Remove reaction to/from brew
+            pass  # TODO: Remove reaction from brew
 
     def post(self, request):
         slack_api.verify_signature(request)

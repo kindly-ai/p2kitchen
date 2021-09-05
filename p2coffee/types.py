@@ -55,9 +55,22 @@ class Machine:
 
     @strawberry.field
     async def last_brew(self, info: Info) -> Optional[Brew]:
-        def _get_last_brew(machine_id):
+        @sync_to_async
+        def get_last_brew(machine_id):
             return models.Brew.objects.filter(machine_id=machine_id).order_by("-modified").last()
 
-        get_last_brew = sync_to_async(_get_last_brew)
-
         return await get_last_brew(self.id)
+
+
+@strawberry.django.type(models.SlackProfile)
+class TopUser:
+    user_id: auto
+    liters_total: int
+
+    @strawberry.field
+    async def liters_total(self, info: Info) -> int:
+        @sync_to_async
+        def get_last_brew(user_id):
+            return int(models.Brew.objects.filter(brewer_id=user_id).count() * 1.25)
+
+        return await get_last_brew(self.user_id)
