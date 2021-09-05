@@ -2,7 +2,7 @@ import React, { ReactElement } from "react";
 
 import Stats from "./Stats";
 import "./App.css";
-import Today from "./Today";
+import Today from "./features/Today/Today";
 
 const App = (): ReactElement => {
   return (
