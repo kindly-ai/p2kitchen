@@ -131,8 +131,8 @@ HUEY = RedisHuey("coffeesite", result_store=False, **rconn)
 
 # Slack
 SLACK_API_TOKEN = os.getenv("SLACK_API_TOKEN")
+SLACK_SIGNING_SECRET = os.getenv("SLACK_SIGNING_SECRET")
 SLACK_CHANNEL = os.getenv("SLACK_CHANNEL", "#kitchen-dev")
-SLACK_SIGNING_SECRET = os.getenv("SLACK_SECRET")
 
 
 # Brewing settings

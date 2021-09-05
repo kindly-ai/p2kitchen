@@ -2,6 +2,7 @@ from django.http import HttpResponseBadRequest, HttpResponse
 from django.views import View
 
 from p2coffee.forms import SensorEventForm
+from p2coffee.models import Machine
 from p2coffee.tasks import on_new_meter
 
 
@@ -19,7 +20,10 @@ class CreateSensorEventView(View):
         if not form.is_valid():
             return HttpResponseBadRequest("Curse you coffeepot!")
 
-        event = form.save()
+        event = form.save(commit=False)
+        machine, created = Machine.objects.get_or_create(device_name=event.id)
+        event.machine = machine
+        event.save()
 
         on_new_meter(event)
 

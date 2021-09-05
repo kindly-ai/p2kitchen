@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.templatetags.tz import localtime
 from django.utils.formats import date_format
 
-from p2coffee.models import SensorEvent, CoffeePotEvent, Brew, BrewReaction, Machine
+from p2coffee.models import SensorEvent, CoffeePotEvent, Brew, BrewReaction, Machine, SlackProfile
 
 
 def format_datetime(dt, dt_format="Y-m-d H:i:s"):
@@ -38,16 +38,16 @@ class MachineAdmin(admin.ModelAdmin):
 
 
 class BrewAdmin(admin.ModelAdmin, CreatedPreciseMixin):
-    list_display = ["id", "started_event", "finished_event", "status", "brewer_slack_username", "created_precise"]
-    list_filter = ["status", "created", "brewer_slack_username"]
-    search_fields = ["brewer_slack_username"]
+    list_display = ["id", "started_event", "finished_event", "status", "brewer", "created_precise"]
+    list_filter = ["status", "created", "brewer"]
+    search_fields = ["brewer"]
     ordering = ["-created"]
 
 
 class BrewReactAdmin(admin.ModelAdmin, CreatedPreciseMixin):
-    list_display = ["reaction", "slack_username", "created_precise"]
-    list_filter = ["created", "slack_username"]
-    search_fields = ["reaction", "slack_username"]
+    list_display = ["reaction", "user", "created_precise"]
+    list_filter = ["created", "user"]
+    search_fields = ["reaction", "user"]
     ordering = ["-created"]
 
 
@@ -57,3 +57,4 @@ admin.site.register(SensorEvent, SensorEventAdmin)
 admin.site.register(Machine, MachineAdmin)
 admin.site.register(Brew, BrewAdmin)
 admin.site.register(BrewReaction, BrewReactAdmin)
+admin.site.register(SlackProfile)

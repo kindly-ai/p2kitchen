@@ -8,12 +8,25 @@ from strawberry.types import Info
 from . import models
 
 
+@strawberry.django.type(models.SlackProfile)
+class SlackProfile:
+    user_id: auto
+    real_name: auto
+    display_name: auto
+    image_original: auto
+    image: str
+
+    @strawberry.field
+    async def image(self, info: Info, size: int = 48) -> str:
+        return self.image(size)
+
+
 @strawberry.django.type(models.BrewReaction)
 class BrewReaction:
     id: auto
     reaction: auto
     is_custom_reaction: auto
-    slack_username: auto
+    user: SlackProfile
     brew: "Brew"
     emoji: str
 
@@ -22,7 +35,7 @@ class BrewReaction:
 class Brew:
     id: auto
     machine: "Machine"
-    brewer_slack_username: auto
+    brewer: SlackProfile
     reactions: List[BrewReaction]
     status: auto
     progress: int

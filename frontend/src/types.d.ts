@@ -1,15 +1,23 @@
+type SlackProfile = {
+  userId: string;
+  displayName?: string;
+  realName?: string;
+  imageOriginal?: string;
+  image48?: string;
+};
 type BrewReaction = {
   id: number;
   reaction: string;
   isCustomReaction: boolean;
   emoji: string;
+  user: SlackProfile;
 };
 
 type Brew = {
   id: number;
   status: string;
   progress: number;
-  brewerSlackUsername: string;
+  brewer?: SlackProfile;
   modified: string;
   created: string;
   reactions: BrewReaction[];

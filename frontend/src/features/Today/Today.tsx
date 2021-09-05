@@ -17,7 +17,13 @@ const GET_MACHINES = gql`
         progress
         created
         modified
-        brewerSlackUsername
+        brewer {
+          userId
+          realName
+          displayName
+          imageOriginal
+          image48: image(size: 48)
+        }
         reactions {
           id
           isCustomReaction

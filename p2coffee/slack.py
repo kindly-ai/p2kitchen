@@ -12,26 +12,23 @@ logger = logging.getLogger(__name__)
 SLACK_API_URL_BASE = "https://slack.com/api/"
 
 
-def _dispatch(method, **data):
+def _dispatch(method, **kwargs):
     headers = {
         "Authorization": f"Bearer {settings.SLACK_API_TOKEN}",
-        "Content-type": "application/json; charset=utf-8",
     }
+    if "json" in kwargs:
+        headers["Content-type"] = "application/json; charset=utf-8"
 
     url = f"{SLACK_API_URL_BASE}{method}"
+    data = kwargs.get("json", {}) if "json" in kwargs else kwargs.get("data", {})
     logger.debug("Sending request to slack with data: %s", json.dumps(data))
 
-    response = requests.post(url, headers=headers, json=data)
-    content = json.loads(response.content.decode())
+    response = requests.post(url, headers=headers, **kwargs)
+    content = response.json()
 
     error = content.get("error")
     if error:
-        logger.error(
-            "Method %s, got response: ok=%s, %s",
-            method,
-            str(content["ok"]),
-            "error=" + error,
-        )
+        logger.error("Method %s, got response: ok=%s, %s", method, str(content["ok"]), "error=" + error)
     else:
         logger.debug("Method %s, got response: ok=%s", method, str(content["ok"]))
     return content
@@ -75,11 +72,11 @@ def conversations_list():
 
 
 def channels_info(channel):
-    return _dispatch("channels.info", channel=channel)
+    return _dispatch("channels.info", json={"channel": channel})
 
 
 def channels_join(channel):
-    return _dispatch("channels.join", channel=channel)
+    return _dispatch("channels.join", json={"channel": channel})
 
 
 def chat_post_message(channel, blocks=None, text=None, attachments=None):
@@ -96,7 +93,7 @@ def chat_post_message(channel, blocks=None, text=None, attachments=None):
     if blocks is not None:
         data["blocks"] = blocks
 
-    return _dispatch("chat.postMessage", **data)
+    return _dispatch("chat.postMessage", json=data)
 
 
 def chat_update(channel, timestamp, text):
@@ -106,7 +103,7 @@ def chat_update(channel, timestamp, text):
         "text": text,
     }
 
-    return _dispatch("chat.update", **data)
+    return _dispatch("chat.update", json=data)
 
 
 def chat_delete(channel, timestamp):
@@ -115,7 +112,7 @@ def chat_delete(channel, timestamp):
         "ts": timestamp,
     }
 
-    return _dispatch("chat.delete", **data)
+    return _dispatch("chat.delete", json=data)
 
 
 def files_upload(f, filename=None, filetype=None, title=None, initial_comment=None, channels=None):
@@ -130,8 +127,17 @@ def files_upload(f, filename=None, filetype=None, title=None, initial_comment=No
     )
 
 
+def users_profile_get(user):
+    """https://api.slack.com/methods/users.profile.get"""
+    data = {"user": user}
+    print("AAAAAA!!!!", data)
+    return _dispatch("users.profile.get", data=data)
+
+
 def verify_signature(request):
     """https://api.slack.com/authentication/verifying-requests-from-slack"""
+    if not settings.SLACK_SIGNING_SECRET:
+        raise ValueError("SLACK_SIGNING_SECRET not set in")
     verifier = SignatureVerifier(settings.SLACK_SIGNING_SECRET)
     if not verifier.is_valid_request(request.body, request.headers):
         raise ValidationError("Invalid slack signature")

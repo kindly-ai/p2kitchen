@@ -1,5 +1,6 @@
 import json
 from http import HTTPStatus
+from logging import getLogger
 from pprint import pprint
 
 import requests
@@ -7,15 +8,18 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from p2coffee.models import Machine
-from p2coffee.slack import verify_signature
+from p2coffee.models import Machine, SlackProfile, Brew, CoffeePotEvent
+from p2coffee import slack as slack_api
+from p2coffee.slack_messages import SELECT_BREWER_ACTION_PREFIX, SELECT_BREWER_BLOCK_ID, _format_selected_brewer_block
+
+logger = getLogger(__name__)
 
 
 class SlackCommandView(APIView):
     COMMANDS = ["status", "help"]
 
     def post(self, request):
-        verify_signature(request)
+        slack_api.verify_signature(request)
         """
         Handle slack command payloads.
         Ref: https://api.slack.com/interactivity/slash-commands#app_command_handling
@@ -51,38 +55,52 @@ def _dispatch_reply(url, data):
 
 
 class SlackInteractionsView(APIView):
+    """
+    Handles interactions with action_id starting with 'select_brewer'.
+    Ref: https://api.slack.com/reference/interaction-payloads
+    """
+
     def post(self, request):
-        verify_signature(request)
-        """https://api.slack.com/reference/interaction-payloads"""
-        BLOCK_ID = "select_brewer_block"
-        ACTION_ID = "select_brewer"
+        slack_api.verify_signature(request)
 
         payload = json.loads(request.data["payload"])
 
-        brewer_action = next(filter(lambda action: action["action_id"] == ACTION_ID, payload["actions"]))
+        brewer_action = next(
+            filter(lambda action: action["action_id"].startswith(SELECT_BREWER_ACTION_PREFIX), payload["actions"])
+        )
         if not brewer_action:
             return Response({"ok": False, "error": "Unsupported action_id"}, status=HTTPStatus.BAD_REQUEST)
+
+        # Lookup brew from Slack interaction action_id
+        brew_id = brewer_action["action_id"].split(":")[1]
+        try:
+            brew = Brew.objects.filter(pk=brew_id)
+        except Brew.DoesNotExist:
+            error_msg = f"Could not find brew from {brew_id=} extracted from action_id"
+            logger.error(error_msg)
+            return Response({"ok": False, "error": error_msg}, status=HTTPStatus.BAD_REQUEST)
+
+        # Update brew with slack profile
         brewer = brewer_action["selected_user"]
 
+        user, created = SlackProfile.objects.get_or_create(pk=brewer)
+        if created:
+            user.sync_profile()
+        brew.brewer = user
+        brew.save()
+
         def replace_select_brewer(block):
-            if block["block_id"] != BLOCK_ID:
+            if block["block_id"] != SELECT_BREWER_BLOCK_ID:
                 return block
-            return {
-                "block_id": BLOCK_ID,
-                "type": "section",
-                "text": {
-                    "type": "mrkdwn",
-                    "text": f"Excellenct <@{brewer}> set as brewer. How did <@{brewer}> do?",
-                    "verbatim": False,
-                },
-            }
+
+            return _format_selected_brewer_block(brew)
 
         response_blocks = [replace_select_brewer(block) for block in payload["message"]["blocks"]]
         response = {
             "blocks": response_blocks,
             "replace_original": "true",
         }
-        pprint(response)
+
         response_url = payload["response_url"]
         _dispatch_reply(response_url, data=response)
 
@@ -105,11 +123,18 @@ class SlackEventsView(APIView):
         if event_type not in self.SUPPORTED_EVENTS:
             raise ValidationError("Unsupported event type")
 
+        user_profile, created = SlackProfile.objects.get_or_create(pk=event_data["user"])
+        if created:
+            user_profile.sync_profile()
+            user_profile.save()
+
+        CoffeePotEvent.objects.filter()
+        Brew.objects.filter()
         # TODO: Find related Brew using item.channel,item.ts tuple
         # TODO: Add/Remove reaction to/from brew
 
     def post(self, request):
-        verify_signature(request)
+        slack_api.verify_signature(request)
 
         payload_type = request.data["type"]
         if payload_type == "url_verification":
