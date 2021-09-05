@@ -1,8 +1,8 @@
 import { gql, useQuery } from "@apollo/client";
 import React, { ReactElement } from "react";
 
-import "./Today.css";
 import { Machine } from "./Machine";
+import classes from "./Today.module.css";
 
 const GET_MACHINES = gql`
   {
@@ -29,7 +29,7 @@ const GET_MACHINES = gql`
   }
 `;
 
-const Today = (): ReactElement => {
+export const Today = (): ReactElement => {
   const { data, loading, error } = useQuery(GET_MACHINES);
 
   console.log("datas", data, "error", error);
@@ -37,17 +37,16 @@ const Today = (): ReactElement => {
   if (loading) return <p>Loading...</p>;
   const machines = data.machines;
   return (
-    <section className="Status">
+    <section>
       <h2>Today & now</h2>
       <p>Where to find the freshest coffee right now</p>
       {machines.map((machine: Machine) => {
         return <Machine key={machine.id} machine={machine} />;
       })}
 
-      <p className="Summary">
+      <p className={classes.Summary}>
         Your team has brewed & consumed 13.5&nbsp;L coffee today, 4&nbsp;L less than yesterday. Keep drinking!!
       </p>
     </section>
   );
 };
-export default Today;

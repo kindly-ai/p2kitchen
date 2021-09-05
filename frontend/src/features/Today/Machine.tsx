@@ -4,17 +4,18 @@ import { BrewProgress } from "./BrewProgress";
 import { BrewReactions } from "./BrewReactions";
 import { Brewer } from "./Brewer";
 import { StatusText } from "./StatusText";
+import classes from "./Today.module.css";
 
 type MachineProps = { machine: Machine };
 
 export const Machine = ({ machine }: MachineProps): ReactElement => {
   const { lastBrew } = machine;
   return (
-    <div className="Machine-item">
-      <img src={machine.avatarUrl} className="Machine-avatar" alt="Machine avatar" />
-      <div className="Brew">
+    <div className={classes.MachineItem}>
+      <img src={machine.avatarUrl} className={classes.MachineAvatar} alt="Machine avatar" />
+      <div className={classes.Brew}>
         <h3>{machine.name}</h3>
-        <div className="Brew-status">
+        <div className={classes.BrewStatus}>
           <StatusText brew={lastBrew} />
         </div>
         <div>

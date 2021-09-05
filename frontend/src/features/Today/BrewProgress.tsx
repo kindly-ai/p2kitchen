@@ -1,6 +1,8 @@
 import { differenceInMinutes, parseISO } from "date-fns";
 import React, { ReactElement } from "react";
 
+import classes from "./Today.module.css";
+
 type BrewProgressProps = { brew?: Brew };
 
 export const BrewProgress = ({ brew }: BrewProgressProps): ReactElement | null => {
@@ -13,8 +15,8 @@ export const BrewProgress = ({ brew }: BrewProgressProps): ReactElement | null =
   }
   return (
     <>
-      <span className="Brew-progressbar-wrap">
-        <span className="Brew-progressbar" style={{ width: `${progress}%` }} />
+      <span className={classes.BrewProgressbarWrap}>
+        <span className={classes.BrewProgressbar} style={{ width: `${progress}%` }} />
       </span>
       <strong>{progress}%</strong>
     </>

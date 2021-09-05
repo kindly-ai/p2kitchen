@@ -1,14 +1,14 @@
 import React, { ReactElement } from "react";
 
+import classes from "./App.module.css";
 import Stats from "./Stats";
-import "./App.css";
-import Today from "./features/Today/Today";
+import { Today } from "./features/Today/Today";
 
 const App = (): ReactElement => {
   return (
-    <div className="App">
-      <main className="App-container">
-        <div className="Panel">
+    <div className={classes.App}>
+      <main className={classes.AppContainer}>
+        <div className={classes.Panel}>
           <Today />
           <Stats />
         </div>
