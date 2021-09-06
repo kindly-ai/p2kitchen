@@ -1,47 +1,11 @@
-import { gql, useQuery } from "@apollo/client";
 import React, { ReactElement } from "react";
 
 import { Machine } from "./Machine";
 import classes from "./Today.module.css";
 
-const GET_MACHINES = gql`
-  {
-    machines {
-      id
-      name
-      status
-      avatarUrl
-      lastBrew {
-        id
-        status
-        progress
-        created
-        modified
-        brewer {
-          userId
-          realName
-          displayName
-          imageOriginal
-          image48: image(size: 48)
-        }
-        reactions {
-          id
-          isCustomReaction
-          reaction
-          emoji
-        }
-      }
-    }
-  }
-`;
+type TodayProps = { machines: Machine[] };
 
-export const Today = (): ReactElement => {
-  const { data, loading, error } = useQuery(GET_MACHINES);
-
-  console.log("datas", data, "error", error);
-
-  if (loading) return <p>Loading...</p>;
-  const machines = data.machines;
+export const Today = ({ machines }: TodayProps): ReactElement => {
   return (
     <section>
       <h2>Today & now</h2>

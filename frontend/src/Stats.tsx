@@ -2,9 +2,8 @@ import { gql, useQuery } from "@apollo/client";
 import React, { ReactElement, useMemo } from "react";
 
 import arrow from "./assets/arrow.svg";
-import bg from "./assets/bg.jpg";
-
 import "./Stats.css";
+import { Machine } from "./features/Today/Machine";
 
 const USERS = gql`
   {
@@ -18,7 +17,10 @@ const USERS = gql`
     }
   }
 `;
-const Stats = (): ReactElement => {
+
+type StatsProps = { machines: Machine[] };
+
+const Stats = ({ machines }: StatsProps): ReactElement => {
   const { data: dataUsers, loading } = useQuery(USERS);
   const users = useMemo(
     () => (dataUsers?.users || []).filter((user: SlackProfile) => user.litersTotal >= 1),
@@ -41,30 +43,16 @@ const Stats = (): ReactElement => {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>
-              <img className="StatsTable-machine-avatar" src={bg} alt="Bryggvar's avatar" />
-              Bryggvar
-            </td>
-            <td>420&nbsp;L</td>
-            <td className="StatsTable-info">Need descaling</td>
-          </tr>
-          <tr>
-            <td>
-              <img className="StatsTable-machine-avatar" src={bg} alt="Grutenberg's avatar" />
-              Grutenberg
-            </td>
-            <td>241&nbsp;L</td>
-            <td className="StatsTable-info" />
-          </tr>
-          <tr>
-            <td>
-              <img className="StatsTable-machine-avatar" src={bg} alt="Kaffelars's avatar" />
-              Kaffelars
-            </td>
-            <td>69&nbsp;L</td>
-            <td className="StatsTable-info">Need descaling</td>
-          </tr>
+          {machines.map((machine) => (
+            <tr key={machine.id}>
+              <td>
+                <img className="StatsTable-machine-avatar" src={machine.avatarUrl} alt={`${machine.name}'s avatar`} />
+                {machine.name}
+              </td>
+              <td>{machine.litersTotal}&nbsp;L</td>
+              <td className="StatsTable-info">{/* TODO */}</td>
+            </tr>
+          ))}
         </tbody>
       </table>
       <h3>Colleagues brewing the most</h3>

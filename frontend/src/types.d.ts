@@ -32,4 +32,5 @@ type Machine = {
   lastBrew?: Brew;
   modified: string;
   created: string;
+  litersTotal: number;
 };

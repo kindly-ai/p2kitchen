@@ -62,6 +62,15 @@ class Machine:
     last_brew: Brew
     created: str
     modified: str
+    liters_total: int
+
+    @strawberry.field
+    async def liters_total(self, info: Info) -> int:
+        @sync_to_async
+        def get_liters_total(machine_id, volume: int):
+            return int(models.Brew.objects.filter(machine_id=machine_id).count() * volume)
+
+        return await get_liters_total(self.id, self.volume)
 
     @strawberry.field
     async def last_brew(self, info: Info) -> Optional[Brew]:
