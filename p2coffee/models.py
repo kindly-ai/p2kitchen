@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 from django.conf import settings
 from django.contrib.humanize.templatetags.humanize import naturaltime
@@ -109,6 +109,22 @@ class SlackProfile(TimeStampedModel):
         return self.user_id
 
 
+def _day_range_tuple(dt=None) -> (datetime, datetime):
+    if dt is None:
+        dt = timezone.now()
+    return dt.replace(hour=0, minute=0, second=0), dt.replace(hour=23, minute=59, second=59)
+
+
+class BrewManager(models.Manager):
+    def today(self):
+        today_start, today_end = _day_range_tuple()
+        return self.filter(finished_event__created__gte=today_start, finished_event__created__lte=today_end)
+
+    def yesterday(self):
+        today_start, today_end = _day_range_tuple(timezone.now() - timedelta(days=1))
+        return self.filter(finished_event__created__gte=today_start, finished_event__created__lte=today_end)
+
+
 class Brew(TimeStampedModel):
     class Status(models.TextChoices):
         BREWING = "brewing", "Brewing"
@@ -125,6 +141,8 @@ class Brew(TimeStampedModel):
 
     slack_channel = models.CharField(max_length=64, null=True, blank=True)
     slack_ts = models.CharField(max_length=64, null=True, blank=True)
+
+    objects = BrewManager()
 
     def __str__(self):
         return self.get_status_display()

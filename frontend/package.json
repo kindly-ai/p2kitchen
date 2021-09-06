@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "scripts": {
     "build": "tsc && vite build",
-    "lint:js": "eslint .",
+    "lint:js": "eslint src",
     "lint:styles": "stylelint src",
-    "format:js": "eslint --fix .",
+    "format:js": "eslint --fix src",
     "format:styles": "stylelint --fix src",
     "dev": "vite",
     "serve": "vite preview"

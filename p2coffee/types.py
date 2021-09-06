@@ -14,8 +14,6 @@ class SlackProfile:
     real_name: auto
     display_name: auto
     image_original: auto
-    image: str
-    liters_total: int
 
     @strawberry.field
     async def liters_total(self, info: Info) -> int:
@@ -59,10 +57,8 @@ class Machine:
     name: auto
     status: auto
     avatar_url: str
-    last_brew: Brew
     created: str
     modified: str
-    liters_total: int
 
     @strawberry.field
     async def liters_total(self, info: Info) -> int:
@@ -79,3 +75,22 @@ class Machine:
             return models.Brew.objects.filter(machine_id=machine_id).order_by("-modified").last()
 
         return await get_last_brew(self.id)
+
+
+@strawberry.type
+class Stats:
+    @strawberry.field
+    async def liters_today(self) -> int:
+        @sync_to_async
+        def get_liters_today():
+            return int(models.Brew.objects.today().count() * 1.25)
+
+        return await get_liters_today()
+
+    @strawberry.field
+    async def liters_yesterday(self) -> int:
+        @sync_to_async
+        def get_liters_yesterday():
+            return int(models.Brew.objects.yesterday().count() * 1.25)
+
+        return await get_liters_yesterday()
