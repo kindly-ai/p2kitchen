@@ -63,8 +63,13 @@ class Machine:
 
 
 @strawberry.django.type(models.SlackProfile)
-class TopUser:
+class TopUser(SlackProfile):
     user_id: auto
+    real_name: auto
+    display_name: auto
+    image_original: auto
+    image: str
+
     liters_total: int
 
     @strawberry.field
@@ -74,3 +79,7 @@ class TopUser:
             return int(models.Brew.objects.filter(brewer_id=user_id).count() * 1.25)
 
         return await get_last_brew(self.user_id)
+
+    @strawberry.field
+    async def image(self, info: Info, size: int = 48) -> str:
+        return self.image(size)

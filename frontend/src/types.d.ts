@@ -32,3 +32,7 @@ type Machine = {
   modified: string;
   created: string;
 };
+
+type TopUser = {
+  litersTotal: number;
+} & SlackProfile;

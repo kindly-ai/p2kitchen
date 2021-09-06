@@ -1,5 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
-import React, { ReactElement } from "react";
+import React, { ReactElement, useMemo } from "react";
 
 import arrow from "./assets/arrow.svg";
 import bg from "./assets/bg.jpg";
@@ -10,13 +10,20 @@ const TOP_USERS = gql`
   {
     topUsers {
       userId
+      realName
+      displayName
+      imageOriginal
+      image48: image(size: 48)
       litersTotal
     }
   }
 `;
 const Stats = (): ReactElement => {
-  const { data, loading } = useQuery(TOP_USERS);
-  console.log("topUsers data", data);
+  const { data: dataTopUsers, loading } = useQuery(TOP_USERS);
+  const topUsers = useMemo(
+    () => (dataTopUsers?.topUsers || []).filter((topUser: TopUser) => topUser.litersTotal >= 1),
+    [dataTopUsers]
+  );
 
   if (loading) return <p>Loading...</p>;
 
@@ -63,20 +70,27 @@ const Stats = (): ReactElement => {
       <h3>Colleagues brewing the most</h3>
       <table className="Brewers">
         <tbody>
-          <tr className="BrewerItem">
-            <td className="Brewer">
-              <img className="Brewer-avatar" src={bg} alt="Unknown's avatar" />
-              Unknown
-            </td>
-            <td>143&nbsp;L</td>
-          </tr>
-          <tr className="BrewerItem">
-            <td className="Brewer">
-              <img className="Brewer-avatar" src={bg} alt="Nikolai's avatar" />
-              Nikolai Kristiansen
-            </td>
-            <td className="Brewer">42&nbsp;L</td>
-          </tr>
+          {/*TODO: unclaimed brews */}
+          {/*<tr className="BrewerItem">*/}
+          {/*  <td className="Brewer">*/}
+          {/*    <img className="Brewer-avatar" src={bg} alt="Unknown's avatar" />*/}
+          {/*    Unknown*/}
+          {/*  </td>*/}
+          {/*  <td>143&nbsp;L</td>*/}
+          {/*</tr>*/}
+          {topUsers.map((topUser: TopUser) => (
+            <tr className="BrewerItem" key={topUser.userId}>
+              <td className="Brewer">
+                <img
+                  className="Brewer-avatar"
+                  src={topUser.image48}
+                  alt={`${topUser.realName || topUser.userId}'s avatar`}
+                />
+                {topUser.realName || topUser.userId}
+              </td>
+              <td className="Brewer">{topUser.litersTotal}&nbsp;L</td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </section>
