@@ -1,9 +1,9 @@
 import { gql, useQuery } from "@apollo/client";
 import React, { ReactElement, useMemo } from "react";
 
-import arrow from "./assets/arrow.svg";
-import "./Stats.css";
-import { Machine } from "./features/Today/Machine";
+import arrow from "../../assets/arrow.svg";
+import { Machine } from "../Today/Machine";
+import classes from "./Stats.module.css";
 
 const USERS = gql`
   {
@@ -20,7 +20,7 @@ const USERS = gql`
 
 type StatsProps = { machines: Machine[] };
 
-const Stats = ({ machines }: StatsProps): ReactElement => {
+export const Stats = ({ machines }: StatsProps): ReactElement => {
   const { data: dataUsers, loading } = useQuery(USERS);
   const users = useMemo(
     () => (dataUsers?.users || []).filter((user: SlackProfile) => user.litersTotal >= 1),
@@ -30,11 +30,11 @@ const Stats = ({ machines }: StatsProps): ReactElement => {
   if (loading) return <p>Loading...</p>;
 
   return (
-    <section className="StatsByPeriod">
+    <section className={classes.StatsByPeriod}>
       <h2>
-        This year <img src={arrow} className="Arrow-icon" alt="Arrow" />
+        This year <img src={arrow} className={classes.ArrowIcon} alt="Arrow" />
       </h2>
-      <table className="StatsTable">
+      <table className={classes.StatsTable}>
         <thead>
           <tr>
             <th>Machine</th>
@@ -46,33 +46,33 @@ const Stats = ({ machines }: StatsProps): ReactElement => {
           {machines.map((machine) => (
             <tr key={machine.id}>
               <td>
-                <img className="StatsTable-machine-avatar" src={machine.avatarUrl} alt={`${machine.name}'s avatar`} />
+                <img
+                  className={classes.StatsTableMachineAvatar}
+                  src={machine.avatarUrl}
+                  alt={`${machine.name}'s avatar`}
+                />
                 {machine.name}
               </td>
               <td>{machine.litersTotal}&nbsp;L</td>
-              <td className="StatsTable-info">{/* TODO */}</td>
+              <td className={classes.StatsTableInfo}>{/* TODO */}</td>
             </tr>
           ))}
         </tbody>
       </table>
       <h3>Colleagues brewing the most</h3>
-      <table className="Brewers">
+      <table className={classes.Brewers}>
         <tbody>
-          {/*TODO: unclaimed brews */}
-          {/*<tr className="BrewerItem">*/}
-          {/*  <td className="Brewer">*/}
-          {/*    <img className="Brewer-avatar" src={bg} alt="Unknown's avatar" />*/}
-          {/*    Unknown*/}
-          {/*  </td>*/}
-          {/*  <td>143&nbsp;L</td>*/}
-          {/*</tr>*/}
           {users.map((user: SlackProfile) => (
-            <tr className="BrewerItem" key={user.userId}>
-              <td className="Brewer">
-                <img className="Brewer-avatar" src={user.image48} alt={`${user.realName || user.userId}'s avatar`} />
+            <tr className={classes.BrewerItem} key={user.userId}>
+              <td className={classes.Brewer}>
+                <img
+                  className={classes.BrewerAvatar}
+                  src={user.image48}
+                  alt={`${user.realName || user.userId}'s avatar`}
+                />
                 {user.realName || user.userId}
               </td>
-              <td className="Brewer">{user.litersTotal}&nbsp;L</td>
+              <td>{user.litersTotal}&nbsp;L</td>
             </tr>
           ))}
         </tbody>
@@ -80,5 +80,3 @@ const Stats = ({ machines }: StatsProps): ReactElement => {
     </section>
   );
 };
-
-export default Stats;

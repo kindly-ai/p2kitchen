@@ -2,7 +2,7 @@ import { gql, useQuery } from "@apollo/client";
 import React, { ReactElement } from "react";
 
 import classes from "./App.module.css";
-import Stats from "./Stats";
+import { Stats } from "./features/Stats/Stats";
 import { Today } from "./features/Today/Today";
 
 const GET_MACHINES = gql`
@@ -36,6 +36,7 @@ const GET_MACHINES = gql`
     }
   }
 `;
+
 const App = (): ReactElement => {
   const { data, loading } = useQuery(GET_MACHINES);
 
