@@ -1,5 +1,6 @@
 type SlackProfile = {
   userId: string;
+  litersTotal: number;
   displayName?: string;
   realName?: string;
   imageOriginal?: string;
@@ -32,7 +33,3 @@ type Machine = {
   modified: string;
   created: string;
 };
-
-type TopUser = {
-  litersTotal: number;
-} & SlackProfile;

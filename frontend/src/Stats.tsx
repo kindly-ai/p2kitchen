@@ -6,9 +6,9 @@ import bg from "./assets/bg.jpg";
 
 import "./Stats.css";
 
-const TOP_USERS = gql`
+const USERS = gql`
   {
-    topUsers {
+    users {
       userId
       realName
       displayName
@@ -19,10 +19,10 @@ const TOP_USERS = gql`
   }
 `;
 const Stats = (): ReactElement => {
-  const { data: dataTopUsers, loading } = useQuery(TOP_USERS);
-  const topUsers = useMemo(
-    () => (dataTopUsers?.topUsers || []).filter((topUser: TopUser) => topUser.litersTotal >= 1),
-    [dataTopUsers]
+  const { data: dataUsers, loading } = useQuery(USERS);
+  const users = useMemo(
+    () => (dataUsers?.users || []).filter((user: SlackProfile) => user.litersTotal >= 1),
+    [dataUsers]
   );
 
   if (loading) return <p>Loading...</p>;
@@ -78,17 +78,13 @@ const Stats = (): ReactElement => {
           {/*  </td>*/}
           {/*  <td>143&nbsp;L</td>*/}
           {/*</tr>*/}
-          {topUsers.map((topUser: TopUser) => (
-            <tr className="BrewerItem" key={topUser.userId}>
+          {users.map((user: SlackProfile) => (
+            <tr className="BrewerItem" key={user.userId}>
               <td className="Brewer">
-                <img
-                  className="Brewer-avatar"
-                  src={topUser.image48}
-                  alt={`${topUser.realName || topUser.userId}'s avatar`}
-                />
-                {topUser.realName || topUser.userId}
+                <img className="Brewer-avatar" src={user.image48} alt={`${user.realName || user.userId}'s avatar`} />
+                {user.realName || user.userId}
               </td>
-              <td className="Brewer">{topUser.litersTotal}&nbsp;L</td>
+              <td className="Brewer">{user.litersTotal}&nbsp;L</td>
             </tr>
           ))}
         </tbody>

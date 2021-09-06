@@ -15,6 +15,16 @@ class SlackProfile:
     display_name: auto
     image_original: auto
     image: str
+    liters_total: int
+
+    @strawberry.field
+    async def liters_total(self, info: Info) -> int:
+        @sync_to_async
+        def get_liters_total(user_id):
+            # FIXME: Just uses a hardcoded machine volumen for now
+            return int(models.Brew.objects.filter(brewer_id=user_id).count() * 1.25)
+
+        return await get_liters_total(self.user_id)
 
     @strawberry.field
     async def image(self, info: Info, size: int = 48) -> str:
@@ -60,26 +70,3 @@ class Machine:
             return models.Brew.objects.filter(machine_id=machine_id).order_by("-modified").last()
 
         return await get_last_brew(self.id)
-
-
-@strawberry.django.type(models.SlackProfile)
-class TopUser(SlackProfile):
-    user_id: auto
-    real_name: auto
-    display_name: auto
-    image_original: auto
-    image: str
-
-    liters_total: int
-
-    @strawberry.field
-    async def liters_total(self, info: Info) -> int:
-        @sync_to_async
-        def get_last_brew(user_id):
-            return int(models.Brew.objects.filter(brewer_id=user_id).count() * 1.25)
-
-        return await get_last_brew(self.user_id)
-
-    @strawberry.field
-    async def image(self, info: Info, size: int = 48) -> str:
-        return self.image(size)

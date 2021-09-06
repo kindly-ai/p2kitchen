@@ -2,26 +2,13 @@ import strawberry
 
 from typing import List
 
-from asgiref.sync import sync_to_async
-from strawberry.types import Info
-
-from p2coffee import models
-from p2coffee.types import Machine, TopUser
+from p2coffee.types import Machine, SlackProfile
 
 
 @strawberry.type
 class Query:
     machines: List[Machine] = strawberry.django.field()
-    top_users: List[TopUser] = strawberry.django.field()
-
-    # FIXME: Why not?
-    # @strawberry.field
-    # async def top_users(self, info: Info) -> List[TopUser]:
-    #     @sync_to_async
-    #     def get_top_users():
-    #         return models.SlackProfile.objects.all()
-    #
-    #     return await get_top_users()
+    users: List[SlackProfile] = strawberry.django.field()
 
 
 schema = strawberry.Schema(query=Query)
