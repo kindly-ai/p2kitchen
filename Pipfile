@@ -25,6 +25,10 @@ python-dotenv = "*"
 
 [dev-packages]
 black = "==21.7b0"
+pytest = "*"
+pytest-django = "*"
+pytest-socket = "*"
+responses = "*"
 
 [requires]
 python_version = "3.9"

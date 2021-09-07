@@ -1,4 +1,6 @@
 """ https://docs.djangoproject.com/en/1.9/ref/settings/ """
+import sys
+
 from huey import RedisHuey
 from urllib.parse import urlparse
 import dj_database_url
@@ -19,6 +21,8 @@ SECRET_KEY = os.getenv("SECRET_KEY", "changeme")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DJANGO_DEBUG", True)
+
+TESTING = any(m in sys.modules for m in ["pytest", "py.test"])
 
 ALLOWED_HOSTS = ["*"] if DEBUG else os.getenv("ALLOWED_HOSTS", "").split(",")
 
@@ -125,9 +129,13 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 # Huey worker
-rconn = urlparse(os.environ.get("REDISTOGO_URL", "redis://localhost:6379"))
-rconn = {"host": rconn.hostname, "port": rconn.port, "password": rconn.password}
-HUEY = RedisHuey("coffeesite", result_store=False, **rconn)
+redis_conntion_args = urlparse(os.environ.get("REDISTOGO_URL", "redis://localhost:6379"))
+redis_conntion_args = {
+    "host": redis_conntion_args.hostname,
+    "port": redis_conntion_args.port,
+    "password": redis_conntion_args.password,
+}
+HUEY = RedisHuey("coffeesite", results=False, immediate=TESTING, **redis_conntion_args)
 
 # Slack
 SLACK_API_TOKEN = os.getenv("SLACK_API_TOKEN")

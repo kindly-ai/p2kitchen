@@ -3,7 +3,7 @@ from django.views import View
 
 from p2coffee.forms import SensorEventForm
 from p2coffee.models import Machine
-from p2coffee.tasks import on_new_meter
+from p2coffee.sensor_events import handle_event_created
 
 
 class CreateSensorEventView(View):
@@ -25,6 +25,6 @@ class CreateSensorEventView(View):
         event.machine = machine
         event.save()
 
-        on_new_meter(event)
+        handle_event_created(event)
 
         return HttpResponse("Thank you coffepot!")
