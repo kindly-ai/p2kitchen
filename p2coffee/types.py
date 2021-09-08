@@ -72,7 +72,7 @@ class Machine:
     async def last_brew(self, info: Info) -> Optional[Brew]:
         @sync_to_async
         def get_last_brew(machine_id):
-            return models.Brew.objects.filter(machine_id=machine_id).order_by("-modified").last()
+            return models.Brew.objects.filter(machine_id=machine_id).order_by("modified").last()
 
         return await get_last_brew(self.id)
 

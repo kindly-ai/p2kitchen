@@ -21,7 +21,7 @@ class CreateSensorEventView(View):
             return HttpResponseBadRequest("Curse you coffeepot!")
 
         event = form.save(commit=False)
-        machine, created = Machine.objects.get_or_create(device_name=event.id)
+        machine, created = Machine.objects.get_or_create(device_name=event.id, defaults={"name": event.id})
         event.machine = machine
         event.save()
 

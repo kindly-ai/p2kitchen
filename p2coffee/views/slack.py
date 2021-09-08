@@ -31,9 +31,11 @@ class SlackCommandView(APIView):
         # TODO: Improve parse command
         pprint(request.data)
         if request.data["text"] == "status":
-            machine_status = list(Machine.objects.values_list("name", "status"))
-            # TODO: add last brew/freshness indicator/text
-            formatted_statuses = "\n".join([f"{m[0]}: {m[1]}" for m in machine_status])
+            statuses = []
+            for machine in Machine.objects.all():
+                brew_status = machine.last_brew.status_humanized() if machine.last_brew else ""
+                statuses.append(f" - {machine.name} {brew_status}")
+            formatted_statuses = "\n".join(statuses)
             text = f"Kitchen status:\n\n{formatted_statuses or 'No machines and nothing to report 😿'}"
         else:
             text = f"Try using one of the following commands\n{' '.join(self.COMMANDS)}"
@@ -75,7 +77,7 @@ class SlackInteractionsView(APIView):
         # Lookup brew from Slack interaction action_id
         brew_id = brewer_action["action_id"].split(":")[1]
         try:
-            brew = Brew.objects.filter(pk=brew_id)
+            brew = Brew.objects.get(pk=brew_id)
         except Brew.DoesNotExist:
             error_msg = f"Could not find brew from {brew_id=} extracted from action_id"
             logger.error(error_msg)
@@ -112,14 +114,6 @@ class SlackEventsView(APIView):
     SUPPORTED_EVENTS = ["reaction_added", "reaction_removed"]
 
     def handle_event(self, event_data):
-        example_event_data = {
-            "event_ts": "1629994395.027600",
-            "item": {"channel": "CD42RPZL7", "ts": "1629994379.027400", "type": "message"},
-            "item_user": "U02CFHANZS7",
-            "reaction": "tada",
-            "type": "reaction_added",
-            "user": "U85U5A4P5",
-        }
         event_type = event_data["type"]
         if event_type not in self.SUPPORTED_EVENTS:
             raise ValidationError("Unsupported event type")
@@ -131,17 +125,17 @@ class SlackEventsView(APIView):
 
         # Find related Brew using item.channel,item.ts tuple
         try:
-            brew = Brew.objects.get(slack_ts=event_data["item"]["ts"], slack_channel=event_data["item"]["ts"])
+            brew = Brew.objects.get(slack_ts=event_data["item"]["ts"], slack_channel=event_data["item"]["channel"])
         except Brew.DoesNotExist:
             logger.error("Reacted to brew that does not exist")
             return
 
+        reaction = event_data["reaction"]
         if event_data["type"] == "reaction_added":
-            reaction = event_data["reaction"]
             is_custom = reaction not in EMOJI_MAP
-            BrewReaction.objects.create(brew, reaction=reaction, is_custom_reaction=is_custom, user=user_profile)
+            BrewReaction.objects.create(brew=brew, reaction=reaction, is_custom_reaction=is_custom, user=user_profile)
         elif event_data["type"] == "reaction_removed":
-            pass  # TODO: Remove reaction from brew
+            BrewReaction.objects.filter(brew=brew, reaction=reaction, user=user_profile).delete()
 
     def post(self, request):
         slack_api.verify_signature(request)

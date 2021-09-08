@@ -36,27 +36,25 @@ def _format_brew_block(status_text: str):
 
 def _format_selected_brewer_block(brew: "Brew"):
     if not brew.brewer:
-        return (
-            {
-                "type": "section",
-                "block_id": SELECT_BREWER_BLOCK_ID,
-                "text": {
-                    "type": "mrkdwn",
-                    "text": "Pick the user who's brewing this batch from the dropdown list",
-                },
-                "accessory": {
-                    "action_id": f"{SELECT_BREWER_ACTION_PREFIX}:{brew.pk}",
-                    "type": "users_select",
-                    "placeholder": {"type": "plain_text", "text": "Select a brewer"},
-                },
+        return {
+            "type": "section",
+            "block_id": SELECT_BREWER_BLOCK_ID,
+            "text": {
+                "type": "mrkdwn",
+                "text": "Select the user who's brewing this batch",
             },
-        )
+            "accessory": {
+                "action_id": f"{SELECT_BREWER_ACTION_PREFIX}:{brew.pk}",
+                "type": "users_select",
+                "placeholder": {"type": "plain_text", "text": "Select a brewer"},
+            },
+        }
     return {
         "type": "section",
         "block_id": SELECT_BREWER_BLOCK_ID,
         "text": {
             "type": "mrkdwn",
-            "text": f"<@{brew.brewer.user_id}> set as brewer. How did they do?",
+            "text": f"<@{brew.brewer.user_id}> brewed this batch. How did they do?",
             "verbatim": False,
         },
     }
@@ -87,6 +85,10 @@ def brew_update_message(brew: "Brew"):
 
 
 def brew_finished_message(brew: "Brew"):
-    status_text = f"Brew {brew.pk} ready. {brew.machine.name} started brewing at {brew.started_event.created} and finised at {brew.finished_event.created}"
+    start_time = format_local_timestamp(brew.started_event.created, "%H:%M:%S")
+    end_time = format_local_timestamp(brew.finished_event.created, "%H:%M:%S")
+    status_text = (
+        f"Brew {brew.pk} ready. {brew.machine.name} started brewing at {start_time} and finished at {end_time}"
+    )
     blocks = [_format_brew_block(status_text), _format_selected_brewer_block(brew)]
     return {"blocks": blocks}

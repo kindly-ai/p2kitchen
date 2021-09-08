@@ -51,10 +51,14 @@ class BrewReactAdmin(admin.ModelAdmin, CreatedPreciseMixin):
     ordering = ["-created"]
 
 
+class SlackProfileAdmin(admin.ModelAdmin, CreatedPreciseMixin):
+    list_display = ["user_id", "display_name", "real_name", "image_original"]
+
+
 admin.site.register(CoffeePotEvent, CoffeePotEventAdmin)
 admin.site.register(SensorEvent, SensorEventAdmin)
 
 admin.site.register(Machine, MachineAdmin)
 admin.site.register(Brew, BrewAdmin)
 admin.site.register(BrewReaction, BrewReactAdmin)
-admin.site.register(SlackProfile)
+admin.site.register(SlackProfile, SlackProfileAdmin)

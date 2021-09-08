@@ -21,16 +21,16 @@ def _dispatch(method, **kwargs):
 
     url = f"{SLACK_API_URL_BASE}{method}"
     data = kwargs.get("json", {}) if "json" in kwargs else kwargs.get("data", {})
-    logger.debug("Sending request to slack with data: %s", json.dumps(data))
+    logger.debug("Sending request to slack with data: %s", json.dumps(data, indent=2, ensure_ascii=False))
 
     response = requests.post(url, headers=headers, **kwargs)
     content = response.json()
 
     error = content.get("error")
     if error:
-        logger.error("Method %s, got response: ok=%s, %s", method, str(content["ok"]), "error=" + error)
+        logger.error(f"Method {method}, got response: ok={content['ok']}, {error=}")
     else:
-        logger.debug("Method %s, got response: ok=%s", method, str(content["ok"]))
+        logger.debug(f"Method {method}, got response: ok={content['ok']}")
     return content
 
 
@@ -48,22 +48,17 @@ def _upload(method, f, channels=None, **data):
 
     params = urllib.parse.urlencode(params)
 
-    url = f"{SLACK_API_URL_BASE}{method}?{params}"
+    url = f"{SLACK_API_URL_BASE}{method}"
     logger.debug("Uploading file to slack.")
 
-    response = requests.post(url, files={"file": ("current.jpg", f)})
+    response = requests.post(url, params=params, files={"file": ("current.jpg", f)})
     content = json.loads(response.content.decode())
 
     error = content.get("error")
     if error:
-        logger.error(
-            "Method %s, Got response: ok=%s, %s",
-            method,
-            str(content["ok"]),
-            "error=" + error,
-        )
+        logger.error(f"Method {method}, got response: ok={content['ok']}, {error=}")
     else:
-        logger.debug("Method %s, Got response: ok=%s", method, str(content["ok"]))
+        logger.debug(f"Method {method}, got response: ok={content['ok']}")
     return content
 
 
@@ -96,12 +91,16 @@ def chat_post_message(channel, blocks=None, text=None, attachments=None):
     return _dispatch("chat.postMessage", json=data)
 
 
-def chat_update(channel, timestamp, text):
+def chat_update(channel, timestamp, text=None, blocks=None):
     data = {
         "channel": channel,
         "ts": timestamp,
-        "text": text,
     }
+    if text:
+        data["text"] = text
+
+    if blocks:
+        data["blocks"] = blocks
 
     return _dispatch("chat.update", json=data)
 

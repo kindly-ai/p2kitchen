@@ -32,18 +32,12 @@ def update_progress(brew_pk):
         logger.error(f"Critical error! Brew {brew_pk} doesn't exist.")
         return
 
-    newer_brews = Brew.objects.filter(created__gt=brew.created).order_by("created")
-    if len(newer_brews) == 0:
-        message = brew.update_message()
+    if brew.status == Brew.Status.FINISHED.value:
+        message = brew.finished_message()
         slack.chat_update(brew.slack_channel, brew.slack_ts, **message)
-        update_progress.schedule(args=(brew_pk,), delay=UPDATE_DELAY_SECONDS)
         return
 
-    for new_event in newer_brews:
-        if new_event.type == Brew.Status.BREWING_FINISHED.value:
-            message = brew.finished_message()
-            slack.chat_update(brew.slack_channel, brew.slack_ts, **message)
-            return
-
-    # Multiple brewings started without finishing. This shouldn't happen.
-    raise RuntimeError("Invalid coffee pot state.")
+    message = brew.update_message()
+    slack.chat_update(brew.slack_channel, brew.slack_ts, **message)
+    # Keep updating progress
+    update_progress.schedule(args=(brew_pk,), delay=UPDATE_DELAY_SECONDS)

@@ -99,7 +99,7 @@ class SlackProfile(TimeStampedModel):
 
         profile = users_profile_get(self.user_id)
         for field_name in sync_fields:
-            value = getattr(profile["profile"], field_name, "")
+            value = profile["profile"].get(field_name, "")
             setattr(self, field_name, value)
 
         if save:
@@ -169,6 +169,12 @@ class Brew(TimeStampedModel):
     def finished_message(self):
         return brew_finished_message(self)
 
+    def status_humanized(self):
+        if self.status == Brew.Status.FINISHED.value:
+            return f"finished {naturaltime(self.finished_event.created)}"
+
+        return f"started {naturaltime(self.started_event.created)}"
+
 
 class BrewReaction(TimeStampedModel):
     brew = models.ForeignKey(Brew, on_delete=models.CASCADE, related_name="reactions")
@@ -198,6 +204,10 @@ class Machine(TimeStampedModel):
     @property
     def avatar_url(self):
         return static(self.avatar_path) if self.avatar_path else ""
+
+    @property
+    def last_brew(self):
+        return self.brews.order_by("modified").last()
 
     def __str__(self):
         return self.name
