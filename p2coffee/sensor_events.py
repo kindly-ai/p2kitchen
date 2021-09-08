@@ -44,7 +44,7 @@ def handle_started(sensor_event: SensorEvent):
 
 def handle_finished(sensor_event: SensorEvent):
     try:
-        brew = Brew.objects.get(status=Brew.Status.BREWING.value, id=sensor_event.id, machine=sensor_event.machine)
+        brew = Brew.objects.get(status=Brew.Status.BREWING.value, machine=sensor_event.machine)
     except Brew.DoesNotExist:
         logger.warning("Could not find matching brew to stop for this sensor event")
         return
