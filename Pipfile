@@ -29,6 +29,7 @@ pytest = "*"
 pytest-django = "*"
 pytest-socket = "*"
 responses = "*"
+pytest-xdist = "*"
 
 [requires]
 python_version = "3.9"

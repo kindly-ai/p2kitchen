@@ -39,5 +39,4 @@ def test_two_sensor_event_creates_brew(sensor_events_started):
     assert Brew.objects.count() == 1
     brew = Brew.objects.get()
     assert brew.status == Brew.Status.BREWING.value
-    # TODO: fix updating machine status
     assert brew.machine.status == Machine.Status.BREWING.value

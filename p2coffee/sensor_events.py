@@ -1,6 +1,6 @@
 import logging
 
-from p2coffee.models import SensorEvent, Brew
+from p2coffee.models import SensorEvent, Brew, Machine
 
 from p2coffee.tasks import start_brewing
 
@@ -28,19 +28,30 @@ def handle_event_created(sensor_event: SensorEvent):
 
     # Compare current with previous and check if start or finished thresholds have been crossed
     if current_value >= THRESHOLD_STARTED_WATTS > previous_value:
-        brew = Brew.objects.create(
-            status=Brew.Status.BREWING.value, started_event=sensor_event, machine=sensor_event.machine
-        )
-        start_brewing(brew)
+        handle_started(sensor_event)
     elif current_value <= THRESHOLD_FINISHED_WATTS < previous_value:
-        # A brew is done
-        try:
-            brew = Brew.objects.get(status=Brew.Status.BREWING.value, id=sensor_event.id, machine=sensor_event.machine)
-        except Brew.DoesNotExist:
-            logger.warning("Could not find matching brew to stop for this sensor event")
-            return
+        handle_finished(sensor_event)
 
-        # Note: It is start_brewing/update_progress responsibility to update slack with the changed brew status.
-        brew.status = Brew.Status.FINISHED.value
-        brew.finished_event = sensor_event
-        brew.save()
+
+def handle_started(sensor_event: SensorEvent):
+    brew = Brew.objects.create(
+        status=Brew.Status.BREWING.value, started_event=sensor_event, machine=sensor_event.machine
+    )
+    brew.machine.status = Machine.Status.BREWING.value
+    brew.machine.save()
+    start_brewing(brew)
+
+
+def handle_finished(sensor_event: SensorEvent):
+    try:
+        brew = Brew.objects.get(status=Brew.Status.BREWING.value, id=sensor_event.id, machine=sensor_event.machine)
+    except Brew.DoesNotExist:
+        logger.warning("Could not find matching brew to stop for this sensor event")
+        return
+
+    # Note: It is start_brewing/update_progress responsibility to update slack with the changed brew status.
+    brew.status = Brew.Status.FINISHED.value
+    brew.finished_event = sensor_event
+    brew.save()
+    brew.machine.status = Machine.Status.IDLE.value
+    brew.machine.save()
