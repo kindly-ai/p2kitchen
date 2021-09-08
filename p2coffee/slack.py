@@ -130,7 +130,6 @@ def files_upload(f, filename=None, filetype=None, title=None, initial_comment=No
 def users_profile_get(user):
     """https://api.slack.com/methods/users.profile.get"""
     data = {"user": user}
-    print("AAAAAA!!!!", data)
     return _dispatch("users.profile.get", data=data)
 
 
