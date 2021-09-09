@@ -2,13 +2,19 @@ import logging
 import io
 import requests
 from django.conf import settings
-from django.utils.timezone import is_naive, get_current_timezone_name, pytz, is_aware, localtime
+from django.utils.timezone import (
+    is_naive,
+    get_current_timezone_name,
+    pytz,
+    is_aware,
+    localtime,
+)
 from requests.exceptions import ConnectionError
 
 logger = logging.getLogger(__name__)
 
 
-def format_local_timestamp(dt, dt_format='%Y-%m-%d %H:%M'):
+def format_local_timestamp(dt, dt_format="%Y-%m-%d %H:%M"):
     """Returns a formatted localized timestamp according current timezone
     :param dt: A datetime object
     :param dt_format: Format string passed to strftime"""
@@ -37,4 +43,3 @@ def coffee_image():
         logger.error("Couldn't get camera image: %s", str(e))
 
     return None
-

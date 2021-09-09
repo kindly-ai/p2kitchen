@@ -15,9 +15,21 @@ redis = "==3.5.*"
 requests = "==2.25.*"
 whitenoise = "==5.2.*"
 Django = ">=3.2,<4.0"
+slack-sdk = "*"
+strawberry-graphql = "*"
+uvicorn = "*"
+strawberry-graphql-django = "*"
+django-cors-headers = "*"
+pillow = "*"
+python-dotenv = "*"
 
 [dev-packages]
 black = "==21.7b0"
+pytest = "*"
+pytest-django = "*"
+pytest-socket = "*"
+responses = "*"
+pytest-xdist = "*"
 
 [requires]
 python_version = "3.9"

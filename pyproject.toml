@@ -1,0 +1,8 @@
+[tool.black]
+line-length = 120
+target_version = ['py39']
+exclude = '(/(\.venv|\.git|\.mypy_cache|coverage|node_modules|staticfiles|media|tmp|dump|static)/)'
+
+[tool.pytest.ini_options]
+addopts = '--nomigrations --allow-hosts=localhost,127.0.0.1,::1'
+DJANGO_SETTINGS_MODULE = 'coffeesite.settings'

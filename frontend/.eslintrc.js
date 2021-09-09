@@ -40,7 +40,7 @@ module.exports = {
     "react/jsx-filename-extension": ["warn", { extensions: [".js", ".jsx", ".ts", ".tsx"] }],
     "react/jsx-uses-react": "off",
     "react/prefer-stateless-function": "warn",
-    "react/prop-types": "warn",
+    "react/prop-types": "off",
     "react/react-in-jsx-scope": "off",
     "react/sort-comp": "off",
   },

@@ -1,0 +1,25 @@
+.App {
+  min-height: 100vh;
+  padding: 28px 26px;
+  background: linear-gradient(216.59deg, rgba(255, 153, 0, 0.2) 21.3%, rgba(208, 0, 125, 0.2) 85.41%);
+  font-size: 18px;
+  mix-blend-mode: overlay;
+}
+.AppContainer {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.Panel {
+  max-width: 1400px;
+  padding: 32px 48px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 40px;
+}
+@media (min-width: 940px) {
+  .Panel {
+    display: grid;
+    grid-gap: 32px;
+    grid-template-columns: 7fr 5fr;
+  }
+}
