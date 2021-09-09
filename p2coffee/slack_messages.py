@@ -71,7 +71,7 @@ def brew_update_message(brew: "Brew"):
     status_text = f"{brew.machine.name} started brewing at {start_time}"
 
     duration = (timezone.now() - brew.created).seconds
-    avg_brewtime = settings.BREWTIME_AVG_MINUTES * 60
+    avg_brewtime = settings.BREWTIME_AVG_SECONDS
 
     if duration > avg_brewtime:
         progress_msg = _create_progress_bar(100)

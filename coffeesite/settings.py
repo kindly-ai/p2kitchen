@@ -144,8 +144,7 @@ SLACK_CHANNEL = os.getenv("SLACK_CHANNEL", "#kitchen-dev")
 
 
 # Brewing settings
-BREWTIME_AVG_MINUTES = int(os.getenv("BREWTIME_AVG_MINUTES", "4"))  # FIXME: Legacy
-BREWTIME_AVG_SECONDS = int(os.getenv("BREWTIME_AVG_SECONDS", "270"))  # 4 min and 30 seconds
+BREWTIME_AVG_SECONDS = int(os.getenv("BREWTIME_AVG_SECONDS", "290"))  # 4 min and 50 seconds
 
 try:
     from .local_settings import *

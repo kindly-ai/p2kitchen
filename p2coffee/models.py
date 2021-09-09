@@ -58,7 +58,7 @@ class CoffeePotEvent(TimeStampedModel):
         duration = ""
 
         if self.type == CoffeePotEvent.EventType.BREWING_STARTED.value:
-            brew_time = timedelta(minutes=settings.BREWTIME_AVG_MINUTES)
+            brew_time = timedelta(seconds=settings.BREWTIME_AVG_SECONDS)
             expected_brewtime = naturaltime(self.created + brew_time)
             duration = f" and should be done {expected_brewtime}"
 
