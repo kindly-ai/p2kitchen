@@ -9,5 +9,6 @@ export default defineConfig({
   plugins: [reactRefresh(), reactSvgPlugin()],
   define: {
     __DEV__: process.env.NODE_ENV !== 'prodution'
-  }
+  },
+  envDir: '..'
 });
