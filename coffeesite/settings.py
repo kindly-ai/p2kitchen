@@ -123,7 +123,7 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 CORS_ALLOWED_ORIGINS = [
-    "https://kindly-kitchen.netlify.com",
+    "https://kindly-kitchen.netlify.app",
     "http://localhost:3000",
     "http://localhost:8000",
 ]
