@@ -25,10 +25,10 @@ class CoffeePotEventAdmin(admin.ModelAdmin, CreatedPreciseMixin):
 
 
 class SensorEventAdmin(admin.ModelAdmin, CreatedPreciseMixin):
-    list_display = ["uuid", "name", "id", "value", "created_precise"]
-    list_filter = ["name", "id", "created"]
+    list_display = ["uuid", "name", "value", "id", "device_name", "created_precise"]
+    list_filter = ["name", "id", "device_name", "created"]
     readonly_fields = ["uuid", "created"]
-    fields = ["name", "id", "value", "uuid", "created"]
+    fields = ["name", "id", "value", "device_name", "uuid", "created"]
     ordering = ["-created"]
 
 
