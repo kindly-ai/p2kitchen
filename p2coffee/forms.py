@@ -5,4 +5,4 @@ from p2coffee.models import SensorEvent
 class SensorEventForm(forms.ModelForm):
     class Meta:
         model = SensorEvent
-        fields = ["name", "value", "id"]
+        fields = ["name", "value", "id", "device_name"]

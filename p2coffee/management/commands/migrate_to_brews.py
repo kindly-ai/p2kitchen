@@ -42,6 +42,7 @@ def migrate(dry_run):
             continue
 
         # machine
+        # FIXME: extract dev-name from sensor id. ie ZWayVDev_zway_2-0-49-4 -> dev2
         sensor_id = sensor_event.id
         try:
             brew_data["machine"] = Machine.objects.get(device_name=sensor_id)

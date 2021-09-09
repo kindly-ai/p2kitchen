@@ -10,6 +10,7 @@ def test_sensor_event_create(db, api_client: APIClient):
         "name": "power-meter-has-changed",
         "id": "ZWayVDev_zway_2-0-49-4",
         "value": "4.6",
+        "device_name": "dev2",
     }
     url = f'{reverse("create-log-event")}'
 

@@ -3,7 +3,7 @@ import pytest
 from p2coffee.models import Machine, SensorEvent, Brew
 
 SENSOR_ID = "ZWayVDev_zway_2-0-49-4"
-BASE_SENSOR_DATA = {"id": SENSOR_ID, "name": "power-meter-has-changed"}
+BASE_SENSOR_DATA = {"id": SENSOR_ID, "name": "power-meter-has-changed", "device_name": "dev2"}
 
 
 @pytest.fixture

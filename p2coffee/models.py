@@ -23,6 +23,7 @@ class SensorEvent(TimeStampedModel):
     name = models.CharField(max_length=254, choices=Name.choices)
     value = models.CharField(max_length=254)
     id = models.CharField(max_length=254, help_text="Device ID")
+    device_name = models.CharField(max_length=254, help_text="Device name", blank=True, default="")
     machine = models.ForeignKey("p2coffee.Machine", on_delete=models.SET_NULL, blank=True, null=True)
 
     def __str__(self):
