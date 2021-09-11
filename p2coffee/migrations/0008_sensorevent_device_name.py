@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('p2coffee', '0007_auto_20210908_1929'),
+        ("p2coffee", "0007_auto_20210908_1929"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='sensorevent',
-            name='device_name',
-            field=models.CharField(blank=True, default='', help_text='Device name', max_length=254),
+            model_name="sensorevent",
+            name="device_name",
+            field=models.CharField(blank=True, default="", help_text="Device name", max_length=254),
         ),
     ]
