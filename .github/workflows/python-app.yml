@@ -22,7 +22,7 @@ jobs:
         pipenv install --dev
     - name: Lint with black
       run: |
-        black --check .
+        pipenv run black --check .
     - name: Test with pytest
       run: |
-        pytest -v
+        pipenv run pytest -v
