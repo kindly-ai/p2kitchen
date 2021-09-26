@@ -64,7 +64,8 @@ class Machine:
     async def liters_total(self, info: Info) -> int:
         @sync_to_async
         def get_liters_total(machine_id, volume: int):
-            return int(models.Brew.objects.filter(machine_id=machine_id).count() * volume)
+            brews = models.Brew.objects.filter(machine_id=machine_id).exclude(status=models.Brew.Status.INVALID.value)
+            return int(brews.count() * volume)
 
         return await get_liters_total(self.id, self.volume)
 
@@ -72,7 +73,8 @@ class Machine:
     async def last_brew(self, info: Info) -> Optional[Brew]:
         @sync_to_async
         def get_last_brew(machine_id):
-            return models.Brew.objects.filter(machine_id=machine_id).order_by("modified").last()
+            brews = models.Brew.objects.filter(machine_id=machine_id).exclude(status=models.Brew.Status.INVALID.value)
+            return brews.order_by("modified").last()
 
         return await get_last_brew(self.id)
 

@@ -36,6 +36,9 @@ def update_progress(brew_pk):
         message = brew.finished_message()
         slack.chat_update(brew.slack_channel, brew.slack_ts, **message)
         return
+    elif brew.status == Brew.Status.INVALID.value:
+        slack.chat_delete(brew.slack_channel, brew.slack_ts)
+        return
 
     message = brew.update_message()
     slack.chat_update(brew.slack_channel, brew.slack_ts, **message)

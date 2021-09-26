@@ -130,6 +130,7 @@ class Brew(TimeStampedModel):
     class Status(models.TextChoices):
         BREWING = "brewing", "Brewing"
         FINISHED = "finished", "Finished"
+        INVALID = "invalid", "Invalid"
 
     started_event = models.ForeignKey(SensorEvent, on_delete=models.CASCADE, related_name="brews_started")
     finished_event = models.ForeignKey(
