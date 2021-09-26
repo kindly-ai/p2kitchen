@@ -29,6 +29,7 @@ pytest-django = "*"
 pytest-socket = "*"
 responses = "*"
 pytest-xdist = "*"
+freezegun = "*"
 
 [requires]
 python_version = "3.9"

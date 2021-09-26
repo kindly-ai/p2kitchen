@@ -1,4 +1,9 @@
+from datetime import timedelta
+
 import pytest
+from django.conf import settings
+from django.utils.timezone import now
+from freezegun import freeze_time
 
 from p2coffee.models import Machine, SensorEvent, Brew
 
@@ -16,8 +21,9 @@ def sensor_events_started(machine):
     idle_watts = "0.0"
     started_watts = "1200"
 
-    idle = SensorEvent.objects.create(**BASE_SENSOR_DATA, value=idle_watts, machine=machine)
-    started = SensorEvent.objects.create(**BASE_SENSOR_DATA, value=started_watts, machine=machine)
+    with freeze_time(now() - timedelta(seconds=settings.BREWTIME_AVG_SECONDS)):
+        idle = SensorEvent.objects.create(**BASE_SENSOR_DATA, value=idle_watts, machine=machine)
+        started = SensorEvent.objects.create(**BASE_SENSOR_DATA, value=started_watts, machine=machine)
     return idle, started
 
 
