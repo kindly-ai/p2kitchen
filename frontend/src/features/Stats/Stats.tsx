@@ -29,7 +29,6 @@ export const Stats = ({ machines }: StatsProps): ReactElement => {
         .sort((a: SlackProfile, b: SlackProfile) => b.litersTotal - a.litersTotal),
     [userData]
   );
-  console.log(users);
 
   const topMachines = useMemo(
     () => [...machines].sort((a: Machine, b: Machine) => b.litersTotal - a.litersTotal),
