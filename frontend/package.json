@@ -8,6 +8,7 @@
     "format:js": "eslint --fix src",
     "format:styles": "stylelint --fix src",
     "dev": "vite",
+    "start": "vite",
     "serve": "vite preview"
   },
   "dependencies": {

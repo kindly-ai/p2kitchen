@@ -21,10 +21,19 @@ const USERS = gql`
 type StatsProps = { machines: Machine[] };
 
 export const Stats = ({ machines }: StatsProps): ReactElement => {
-  const { data: dataUsers, loading } = useQuery(USERS);
+  const { data: userData, loading } = useQuery(USERS);
   const users = useMemo(
-    () => (dataUsers?.users || []).filter((user: SlackProfile) => user.litersTotal >= 1),
-    [dataUsers]
+    () =>
+      (userData?.users || [])
+        .filter((user: SlackProfile) => user.litersTotal >= 1)
+        .sort((a: SlackProfile, b: SlackProfile) => b.litersTotal - a.litersTotal),
+    [userData]
+  );
+  console.log(users);
+
+  const topMachines = useMemo(
+    () => [...machines].sort((a: Machine, b: Machine) => b.litersTotal - a.litersTotal),
+    [machines]
   );
 
   if (loading) return <p>Loading...</p>;
@@ -43,7 +52,7 @@ export const Stats = ({ machines }: StatsProps): ReactElement => {
           </tr>
         </thead>
         <tbody>
-          {machines.map((machine) => (
+          {topMachines.map((machine) => (
             <tr key={machine.id}>
               <td>
                 <img
