@@ -132,6 +132,11 @@ def users_profile_get(user):
     return _dispatch("users.profile.get", data=data)
 
 
+def emoji_list():
+    """https://api.slack.com/methods/emoji.list"""
+    return _dispatch("emoji.list")
+
+
 def verify_signature(request):
     """https://api.slack.com/authentication/verifying-requests-from-slack"""
     if not settings.SLACK_SIGNING_SECRET:

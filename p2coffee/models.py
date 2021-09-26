@@ -2,6 +2,7 @@ from datetime import timedelta, datetime
 
 from django.conf import settings
 from django.contrib.humanize.templatetags.humanize import naturaltime
+from django.core.cache import cache
 from django.db import models
 from django.templatetags.static import static
 from django.utils import timezone
@@ -10,6 +11,7 @@ from django_extensions.db.models import TimeStampedModel
 import uuid
 
 from p2coffee.emojis import EMOJI_MAP
+from p2coffee.slack import emoji_list
 from p2coffee.slack_messages import brew_started_message, brew_update_message, brew_finished_message
 
 
@@ -186,7 +188,16 @@ class BrewReaction(TimeStampedModel):
 
     @property
     def emoji(self):
+        if self.is_custom_reaction:
+            return self.custom_emoji()
         return EMOJI_MAP.get(self.reaction, self.reaction)
+
+    def custom_emoji(self):
+        custom_emoji = cache.get("custom_emoji") or {}
+        if self.reaction not in custom_emoji:
+            custom_emoji = emoji_list()["emoji"]
+            cache.set("custom_emoji", custom_emoji)
+        return custom_emoji.get(self.reaction, self.reaction)
 
     def __str__(self):
         return self.reaction
