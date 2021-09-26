@@ -35,13 +35,14 @@ def _format_brew_block(status_text: str):
 
 
 def _format_selected_brewer_block(brew: "Brew"):
+    status_tensed = "is brewing" if brew.status == brew.Status.BREWING else "brewed"
     if not brew.brewer:
         return {
             "type": "section",
             "block_id": SELECT_BREWER_BLOCK_ID,
             "text": {
                 "type": "mrkdwn",
-                "text": "Select the user who's brewing this batch",
+                "text": f"Select the user who {status_tensed} this batch",
             },
             "accessory": {
                 "action_id": f"{SELECT_BREWER_ACTION_PREFIX}:{brew.pk}",
@@ -54,7 +55,7 @@ def _format_selected_brewer_block(brew: "Brew"):
         "block_id": SELECT_BREWER_BLOCK_ID,
         "text": {
             "type": "mrkdwn",
-            "text": f"<@{brew.brewer.user_id}> brewed this batch. How did they do?",
+            "text": f"<@{brew.brewer.user_id}> {status_tensed} this batch. How did they do?",
             "verbatim": False,
         },
     }
