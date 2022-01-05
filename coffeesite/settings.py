@@ -121,6 +121,7 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 CORS_ALLOWED_ORIGINS = [
+    "https://kitchen.kindly.ai",
     "https://kindly-kitchen.netlify.app",
     "http://localhost:3000",
     "http://localhost:5000",
