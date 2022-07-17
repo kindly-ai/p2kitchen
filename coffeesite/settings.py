@@ -129,7 +129,7 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 # Huey worker
-redis_conntion_args = urlparse(os.environ.get("REDISTOGO_URL", "redis://localhost:6379"))
+redis_conntion_args = urlparse(os.environ.get("REDIS_URL", "redis://localhost:6379"))
 redis_conntion_args = {
     "host": redis_conntion_args.hostname,
     "port": redis_conntion_args.port,
