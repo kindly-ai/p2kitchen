@@ -1,14 +1,13 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import reactRefresh from "@vitejs/plugin-react-refresh";
+import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
-import reactSvgPlugin from "vite-plugin-react-svg";
-
+import svgr from "vite-plugin-svgr";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [reactRefresh(), reactSvgPlugin()],
+  plugins: [react(), svgr()],
   define: {
-    __DEV__: process.env.NODE_ENV !== 'prodution'
+    __DEV__: process.env.NODE_ENV !== "production",
   },
-  envDir: '..'
+  envDir: "..",
 });
