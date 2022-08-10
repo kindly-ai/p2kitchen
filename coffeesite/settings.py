@@ -123,6 +123,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 CORS_ALLOWED_ORIGINS = [
     "https://kitchen.kindly.ai",
     "https://kindly-kitchen.netlify.app",
+    "https://p2kitchen.vercel.app",
     "http://localhost:5173",
     "http://localhost:5000",
     "http://localhost:8000",
