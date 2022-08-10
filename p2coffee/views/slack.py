@@ -8,9 +8,9 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from p2coffee.emojis import EMOJI_MAP
-from p2coffee.models import Machine, SlackProfile, Brew, BrewReaction
 from p2coffee import slack as slack_api
+from p2coffee.emojis import EMOJI_MAP
+from p2coffee.models import Brew, BrewReaction, Machine, SlackProfile
 from p2coffee.slack_messages import SELECT_BREWER_ACTION_PREFIX, SELECT_BREWER_BLOCK_ID, _format_selected_brewer_block
 
 logger = getLogger(__name__)

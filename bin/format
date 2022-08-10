@@ -1,0 +1,5 @@
+#!/bin/bash
+set -eu
+
+isort p2coffee
+black p2coffee

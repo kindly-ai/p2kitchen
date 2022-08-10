@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.templatetags.tz import localtime
 from django.utils.formats import date_format
 
-from p2coffee.models import SensorEvent, CoffeePotEvent, Brew, BrewReaction, Machine, SlackProfile
+from p2coffee.models import Brew, BrewReaction, CoffeePotEvent, Machine, SensorEvent, SlackProfile
 
 
 def format_datetime(dt, dt_format="Y-m-d H:i:s"):

@@ -7,7 +7,6 @@ import requests
 from django.conf import settings
 from django.core.management import BaseCommand
 
-
 EMOJI_DATA_URL = "https://raw.githubusercontent.com/iamcal/emoji-data/master/emoji.json"
 
 EMOJI_MAP_PY = Path(settings.BASE_DIR).joinpath("p2coffee/emojis.py")

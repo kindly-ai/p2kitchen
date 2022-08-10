@@ -1,7 +1,6 @@
 import logging
 
-from p2coffee.models import SensorEvent, Brew, Machine
-
+from p2coffee.models import Brew, Machine, SensorEvent
 from p2coffee.tasks import start_brewing
 
 logger = logging.getLogger(__name__)

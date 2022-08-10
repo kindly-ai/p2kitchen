@@ -1,4 +1,5 @@
-from datetime import timedelta, datetime
+import uuid
+from datetime import datetime, timedelta
 
 from django.conf import settings
 from django.contrib.humanize.templatetags.humanize import naturaltime
@@ -8,11 +9,10 @@ from django.templatetags.static import static
 from django.utils import timezone
 from django.utils.timesince import timesince
 from django_extensions.db.models import TimeStampedModel
-import uuid
 
 from p2coffee.emojis import EMOJI_MAP
 from p2coffee.slack import emoji_list
-from p2coffee.slack_messages import brew_started_message, brew_update_message, brew_finished_message
+from p2coffee.slack_messages import brew_finished_message, brew_started_message, brew_update_message
 
 
 class SensorEvent(TimeStampedModel):

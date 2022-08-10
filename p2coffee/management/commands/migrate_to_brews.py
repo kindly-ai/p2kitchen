@@ -3,7 +3,7 @@ from datetime import timedelta
 
 from django.core.management import BaseCommand
 
-from p2coffee.models import CoffeePotEvent, Machine, SensorEvent, Brew
+from p2coffee.models import Brew, CoffeePotEvent, Machine, SensorEvent
 
 
 def migrate(dry_run):

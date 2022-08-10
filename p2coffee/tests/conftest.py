@@ -5,7 +5,7 @@ from django.conf import settings
 from django.utils.timezone import now
 from freezegun import freeze_time
 
-from p2coffee.models import Machine, SensorEvent, Brew
+from p2coffee.models import Brew, Machine, SensorEvent
 
 SENSOR_ID = "ZWayVDev_zway_2-0-49-4"
 BASE_SENSOR_DATA = {"id": SENSOR_ID, "name": "power-meter-has-changed", "device_name": "dev2"}

@@ -1,8 +1,8 @@
 import json
 import logging
+import urllib.parse
 
 import requests
-import urllib.parse
 from django.conf import settings
 from rest_framework.exceptions import ValidationError
 from slack_sdk.signature import SignatureVerifier

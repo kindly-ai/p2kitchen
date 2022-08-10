@@ -1,10 +1,10 @@
 from django.urls import path
+from strawberry.django.views import AsyncGraphQLView
 
+from p2coffee.schema import schema
 from p2coffee.views.kindly import KindlyOutgoingView
 from p2coffee.views.sensors import CreateSensorEventView
-from p2coffee.views.slack import SlackCommandView, SlackInteractionsView, SlackEventsView
-from strawberry.django.views import AsyncGraphQLView
-from p2coffee.schema import schema
+from p2coffee.views.slack import SlackCommandView, SlackEventsView, SlackInteractionsView
 
 urlpatterns = [
     path("event/log/", CreateSensorEventView.as_view(), name="create-log-event"),

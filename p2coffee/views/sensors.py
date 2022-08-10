@@ -1,4 +1,4 @@
-from django.http import HttpResponseBadRequest, HttpResponse
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.views import View
 
 from p2coffee.forms import SensorEventForm

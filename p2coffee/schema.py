@@ -1,6 +1,6 @@
-import strawberry
-
 from typing import List
+
+import strawberry
 
 from p2coffee.types import Machine, SlackProfile, Stats
 

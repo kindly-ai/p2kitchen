@@ -1,9 +1,10 @@
 import logging
+
 from django.conf import settings
 from huey.contrib.djhuey import db_task
+
 from p2coffee import slack
 from p2coffee.models import Brew
-
 
 logger = logging.getLogger(__name__)
 

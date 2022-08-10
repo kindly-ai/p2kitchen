@@ -1,14 +1,9 @@
-import logging
 import io
+import logging
+
 import requests
 from django.conf import settings
-from django.utils.timezone import (
-    is_naive,
-    get_current_timezone_name,
-    pytz,
-    is_aware,
-    localtime,
-)
+from django.utils.timezone import get_current_timezone_name, is_aware, is_naive, localtime, pytz
 from requests.exceptions import ConnectionError
 
 logger = logging.getLogger(__name__)
