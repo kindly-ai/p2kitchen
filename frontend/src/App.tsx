@@ -1,4 +1,4 @@
-import { gql, useQuery } from "@apollo/client";
+import { gql, useQuery, useSubscription } from "@apollo/client";
 import React, { ReactElement } from "react";
 
 import classes from "./App.module.css";
@@ -37,8 +37,21 @@ const GET_MACHINES = gql`
   }
 `;
 
+const KITCHEN_EVENTS = gql`
+  subscription {
+    connectToKitchenEvents {
+      type
+      message
+    }
+  }
+`;
+
 const App = (): ReactElement => {
-  const { data, loading } = useQuery(GET_MACHINES);
+  const { data: data, loading } = useQuery(GET_MACHINES);
+  const { data: eventsData, loading: eventsLoading } = useSubscription(KITCHEN_EVENTS);
+
+  // TODO: do something with this
+  console.log("🔥", eventsData, eventsLoading);
 
   if (loading) return <p>Loading...</p>;
 
