@@ -9,7 +9,7 @@ from django.core.asgi import get_asgi_application
 
 from .router import GraphQLProtocolTypeRouter
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "coffeesite.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "p2kitchen.settings")
 django_asgi_app = get_asgi_application()
 
 # Import your Strawberry schema after creating the django ASGI application

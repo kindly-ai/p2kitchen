@@ -58,7 +58,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "coffeesite.urls"
+ROOT_URLCONF = "p2coffee.urls"
 
 TEMPLATES = [
     {
@@ -76,8 +76,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "coffeesite.wsgi.application"
-ASGI_APPLICATION = "coffeesite.asgi.application"
+WSGI_APPLICATION = "p2coffee.wsgi.application"
+ASGI_APPLICATION = "p2coffee.asgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
@@ -133,7 +133,7 @@ CORS_ALLOWED_ORIGINS = [
 
 # Huey worker
 REDIS_URL = os.environ.get("REDIS_URL", "redis://localhost:6379")
-HUEY = RedisHuey("coffeesite", results=False, immediate=TESTING, url=REDIS_URL)
+HUEY = RedisHuey("p2coffee", results=False, immediate=TESTING, url=REDIS_URL)
 
 CHANNEL_LAYERS = {
     "default": {
