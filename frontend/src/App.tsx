@@ -1,61 +1,21 @@
-import { gql, useQuery, useSubscription } from "@apollo/client";
-import React, { ReactElement } from "react";
+import { useQuery, useSubscription } from "@apollo/client";
+import React from "react";
 
 import classes from "./App.module.css";
 import { Stats } from "./features/Stats/Stats";
 import { Today } from "./features/Today/Today";
+import { ConnectToKitchenEventsDocument, MachinesDocument } from "./generated";
 
-const GET_MACHINES = gql`
-  {
-    machines {
-      id
-      name
-      status
-      avatarUrl
-      litersTotal
-      lastBrew {
-        id
-        status
-        progress
-        created
-        modified
-        brewer {
-          userId
-          realName
-          displayName
-          imageOriginal
-          image48: image(size: 48)
-        }
-        reactions {
-          id
-          isCustomReaction
-          reaction
-          emoji
-        }
-      }
-    }
-  }
-`;
-
-const KITCHEN_EVENTS = gql`
-  subscription {
-    connectToKitchenEvents {
-      type
-      message
-    }
-  }
-`;
-
-const App = (): ReactElement => {
-  const { data: data, loading } = useQuery(GET_MACHINES);
-  const { data: eventsData, loading: eventsLoading } = useSubscription(KITCHEN_EVENTS, {
+const App = () => {
+  const { data: data, loading } = useQuery(MachinesDocument);
+  const { data: eventsData, loading: eventsLoading } = useSubscription(ConnectToKitchenEventsDocument, {
     onSubscriptionData: ({ subscriptionData: { data, error, loading } }) => {
       // TODO: do something with this
       console.log("🔥 fresh datas", data, error, loading);
     },
   });
 
-  if (loading) return <p>Loading...</p>;
+  if (loading || !data?.machines) return <p>Loading...</p>;
 
   return (
     <div className={classes.App}>

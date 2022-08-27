@@ -1,0 +1,6 @@
+subscription ConnectToKitchenEvents {
+  connectToKitchenEvents {
+    type
+    message
+  }
+}

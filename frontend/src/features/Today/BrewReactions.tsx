@@ -1,10 +1,11 @@
-import React, { ReactElement } from "react";
+import React from "react";
 
-type BrewReactionsProps = { brew?: Brew };
+type BrewReactionsProps = { brew?: MachinesQuery["machines"][0]["lastBrew"] };
 
+import { MachinesQuery } from "../../generated";
 import classes from "./Today.module.css";
 
-export function BrewReactions({ brew }: BrewReactionsProps): ReactElement | null {
+export function BrewReactions({ brew }: BrewReactionsProps) {
   if (!brew) return null;
   const { reactions } = brew;
 

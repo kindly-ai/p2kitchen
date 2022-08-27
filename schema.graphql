@@ -1,0 +1,59 @@
+type Brew {
+  id: ID!
+  machine: Machine!
+  brewer: SlackProfile
+  reactions: [BrewReaction!]!
+  status: String!
+  progress: Int!
+  created: String!
+  modified: String!
+}
+
+type BrewReaction {
+  id: ID!
+  reaction: String!
+  isCustomReaction: Boolean!
+  user: SlackProfile
+  brew: Brew!
+  emoji: String!
+}
+
+type KitchenEvent {
+  type: String!
+  message: String!
+}
+
+type Machine {
+  id: ID!
+  name: String!
+  status: String!
+  avatarUrl: String!
+  created: String!
+  modified: String!
+  lastBrew: Brew
+  litersTotal: Int!
+}
+
+type Query {
+  machines: [Machine!]!
+  users: [SlackProfile!]!
+  stats: Stats!
+}
+
+type SlackProfile {
+  userId: String!
+  realName: String!
+  displayName: String!
+  imageOriginal: String!
+  image(size: Int! = 48): String!
+  litersTotal: Int!
+}
+
+type Stats {
+  litersToday: Int!
+  litersYesterday: Int!
+}
+
+type Subscription {
+  connectToKitchenEvents: KitchenEvent!
+}

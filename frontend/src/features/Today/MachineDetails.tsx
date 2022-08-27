@@ -1,14 +1,15 @@
-import React, { ReactElement } from "react";
+import React from "react";
 
+import type { MachinesQuery } from "../../generated";
 import { BrewProgress } from "./BrewProgress";
 import { BrewReactions } from "./BrewReactions";
 import { Brewer } from "./Brewer";
 import { StatusText } from "./StatusText";
 import classes from "./Today.module.css";
 
-type MachineProps = { machine: Machine };
+type MachineProps = { machine: MachinesQuery["machines"][0] };
 
-export const Machine = ({ machine }: MachineProps): ReactElement => {
+export const MachineDetails = ({ machine }: MachineProps) => {
   const { lastBrew } = machine;
   return (
     <div className={classes.MachineItem}>
