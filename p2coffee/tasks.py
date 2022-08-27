@@ -13,7 +13,7 @@ UPDATE_DELAY_SECONDS = 3
 
 @db_task()
 def start_brewing(brew: Brew):
-    logger.debug("Starting brewing")
+    logger.debug("Started brewing")
     message = brew.started_message()
     response = slack.chat_post_message(settings.SLACK_CHANNEL, **message)
 
@@ -26,7 +26,7 @@ def start_brewing(brew: Brew):
 
 @db_task()
 def update_progress(brew_pk):
-    logger.debug("Updating progress")
+    logger.debug("Updating brew progress")
     try:
         brew = Brew.objects.get(pk=brew_pk)
     except Brew.DoesNotExist:

@@ -17,5 +17,4 @@ django_asgi_app = get_asgi_application()
 # for the schema.
 from p2coffee.schema import schema
 
-
 application = GraphQLProtocolTypeRouter(schema, django_application=django_asgi_app)

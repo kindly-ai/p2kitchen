@@ -44,7 +44,7 @@ class Brew:
     id: auto
     machine: "Machine"
     brewer: SlackProfile
-    reactions: List[BrewReaction]
+    reactions: list[BrewReaction]
     status: auto
     progress: int
     created: str

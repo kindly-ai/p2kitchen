@@ -1,4 +1,5 @@
 from django.urls import path
+
 from p2coffee.views.kindly import KindlyOutgoingView
 from p2coffee.views.sensors import CreateSensorEventView
 from p2coffee.views.slack import SlackCommandView, SlackEventsView, SlackInteractionsView

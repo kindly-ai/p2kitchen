@@ -55,7 +55,7 @@ class CoffeePotEvent(TimeStampedModel):
         return self.as_slack_text()
 
     def as_slack_text(self):
-        return "{} {}{}".format(self.__str__(), naturaltime(self.created), self._get_duration())
+        return f"{self} {naturaltime(self.created)}{self._get_duration()}"
 
     def _get_duration(self):
         duration = ""

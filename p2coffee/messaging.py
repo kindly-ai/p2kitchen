@@ -1,6 +1,5 @@
-from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
-
+from channels.layers import get_channel_layer
 
 GROUP_NAME = "default"
 MESSAGE_TYPE = "kitchen.all"

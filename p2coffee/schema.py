@@ -14,8 +14,8 @@ def resolve_stats() -> Stats:
 
 @strawberry.type
 class Query:
-    machines: List[Machine] = strawberry.django.field()
-    users: List[SlackProfile] = strawberry.django.field()
+    machines: list[Machine] = strawberry.django.field()
+    users: list[SlackProfile] = strawberry.django.field()
     stats: Stats = strawberry.field(resolve_stats)
 
 

@@ -1,14 +1,14 @@
 import re
 from typing import Union
-from urllib.parse import urlparse, ParseResult
+from urllib.parse import ParseResult, urlparse
 
 from channels.routing import ProtocolTypeRouter, URLRouter
+from channels.security.websocket import AllowedHostsOriginValidator
 from django.conf import settings
 from django.urls import re_path
 from strawberry.channels.handlers.http_handler import GraphQLHTTPConsumer
 from strawberry.channels.handlers.ws_handler import GraphQLWSConsumer
 from strawberry.schema import BaseSchema
-from channels.security.websocket import AllowedHostsOriginValidator
 
 
 class CorsGraphQLHTTPConsumer(GraphQLHTTPConsumer):

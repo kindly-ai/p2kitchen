@@ -26,10 +26,10 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterIndexTogether(
             name="coffeepotevent",
-            index_together=set([("created", "modified")]),
+            index_together={("created", "modified")},
         ),
         migrations.AlterIndexTogether(
             name="sensorevent",
-            index_together=set([("created", "modified")]),
+            index_together={("created", "modified")},
         ),
     ]

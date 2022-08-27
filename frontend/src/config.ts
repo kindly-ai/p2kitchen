@@ -4,7 +4,7 @@ import { getMainDefinition } from "@apollo/client/utilities";
 import { createClient } from "graphql-ws";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
-const WS_API_URL = import.meta.env.VITE_API_URL || "ws://localhost:8000";
+const WS_API_URL = import.meta.env.VITE_WS_API_URL || "ws://localhost:8000";
 
 /** Make subscription operations use WS and everything else HTTP */
 const link = split(
