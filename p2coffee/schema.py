@@ -2,6 +2,7 @@ from typing import List
 
 import strawberry
 
+from p2coffee.subscriptions import Subscription
 from p2coffee.types import Machine, SlackProfile, Stats
 
 
@@ -18,4 +19,4 @@ class Query:
     stats: Stats = strawberry.field(resolve_stats)
 
 
-schema = strawberry.Schema(query=Query)
+schema = strawberry.Schema(query=Query, subscription=Subscription)

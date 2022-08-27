@@ -2,7 +2,6 @@
 import sys
 
 from huey import RedisHuey
-from urllib.parse import urlparse
 import dj_database_url
 import os
 from dotenv import load_dotenv
@@ -40,6 +39,8 @@ INSTALLED_APPS = [
     "rest_framework",
     "strawberry.django",
     "corsheaders",
+    "channels",
+    "daphne",
 ]
 
 INSTALLED_APPS += [
@@ -76,6 +77,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "coffeesite.wsgi.application"
+ASGI_APPLICATION = "coffeesite.asgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
@@ -130,13 +132,17 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 # Huey worker
-redis_conntion_args = urlparse(os.environ.get("REDIS_URL", "redis://localhost:6379"))
-redis_conntion_args = {
-    "host": redis_conntion_args.hostname,
-    "port": redis_conntion_args.port,
-    "password": redis_conntion_args.password,
+REDIS_URL = os.environ.get("REDIS_URL", "redis://localhost:6379")
+HUEY = RedisHuey("coffeesite", results=False, immediate=TESTING, url=REDIS_URL)
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [REDIS_URL],
+        },
+    },
 }
-HUEY = RedisHuey("coffeesite", results=False, immediate=TESTING, **redis_conntion_args)
 
 # Slack
 SLACK_API_TOKEN = os.getenv("SLACK_API_TOKEN")

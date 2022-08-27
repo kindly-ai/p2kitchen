@@ -19,7 +19,7 @@ class SlackProfile:
     async def liters_total(self, info: Info) -> int:
         @sync_to_async
         def get_liters_total(user_id):
-            # FIXME: Just uses a hardcoded machine volumen for now
+            # FIXME: Just uses a hardcoded machine volume for now
             return int(models.Brew.objects.filter(brewer_id=user_id).count() * 1.25)
 
         return await get_liters_total(self.user_id)
