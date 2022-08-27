@@ -48,10 +48,12 @@ const KITCHEN_EVENTS = gql`
 
 const App = (): ReactElement => {
   const { data: data, loading } = useQuery(GET_MACHINES);
-  const { data: eventsData, loading: eventsLoading } = useSubscription(KITCHEN_EVENTS);
-
-  // TODO: do something with this
-  console.log("🔥", eventsData, eventsLoading);
+  const { data: eventsData, loading: eventsLoading } = useSubscription(KITCHEN_EVENTS, {
+    onSubscriptionData: ({ subscriptionData: { data, error, loading } }) => {
+      // TODO: do something with this
+      console.log("🔥 fresh datas", data, error, loading);
+    },
+  });
 
   if (loading) return <p>Loading...</p>;
 
