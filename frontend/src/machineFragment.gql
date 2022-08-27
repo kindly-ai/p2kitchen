@@ -1,0 +1,27 @@
+fragment Machine on Machine {
+  id
+  name
+  status
+  avatarUrl
+  litersTotal
+  lastBrew {
+    id
+    status
+    progress
+    created
+    modified
+    brewer {
+      userId
+      realName
+      displayName
+      imageOriginal
+      image48: image(size: 48)
+    }
+    reactions {
+      id
+      isCustomReaction
+      reaction
+      emoji
+    }
+  }
+}

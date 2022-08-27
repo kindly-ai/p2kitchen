@@ -1,0 +1,8 @@
+# import "./machineFragment.gql"
+subscription MachineUpdate {
+  machineUpdate {
+    machines {
+      ...Machine
+    }
+  }
+}

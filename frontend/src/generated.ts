@@ -35,12 +35,6 @@ export type BrewReaction = {
   user?: Maybe<SlackProfile>;
 };
 
-export type KitchenEvent = {
-  __typename?: 'KitchenEvent';
-  message: Scalars['String'];
-  type: Scalars['String'];
-};
-
 export type Machine = {
   __typename?: 'Machine';
   avatarUrl: Scalars['String'];
@@ -51,6 +45,11 @@ export type Machine = {
   modified: Scalars['String'];
   name: Scalars['String'];
   status: Scalars['String'];
+};
+
+export type MachineUpdate = {
+  __typename?: 'MachineUpdate';
+  machines: Array<Machine>;
 };
 
 export type Query = {
@@ -83,13 +82,8 @@ export type Stats = {
 
 export type Subscription = {
   __typename?: 'Subscription';
-  connectToKitchenEvents: KitchenEvent;
+  machineUpdate: MachineUpdate;
 };
-
-export type ConnectToKitchenEventsSubscriptionVariables = Exact<{ [key: string]: never; }>;
-
-
-export type ConnectToKitchenEventsSubscription = { __typename?: 'Subscription', connectToKitchenEvents: { __typename?: 'KitchenEvent', type: string, message: string } };
 
 export type UserStatsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -101,13 +95,20 @@ export type TodayStatsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type TodayStatsQuery = { __typename?: 'Query', stats: { __typename?: 'Stats', litersToday: number, litersYesterday: number } };
 
+export type MachineFragment = { __typename?: 'Machine', id: string, name: string, status: string, avatarUrl: string, litersTotal: number, lastBrew?: { __typename?: 'Brew', id: string, status: string, progress: number, created: string, modified: string, brewer?: { __typename?: 'SlackProfile', userId: string, realName: string, displayName: string, imageOriginal: string, image48: string } | null, reactions: Array<{ __typename?: 'BrewReaction', id: string, isCustomReaction: boolean, reaction: string, emoji: string }> } | null };
+
+export type MachineUpdateSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MachineUpdateSubscription = { __typename?: 'Subscription', machineUpdate: { __typename?: 'MachineUpdate', machines: Array<{ __typename?: 'Machine', id: string, name: string, status: string, avatarUrl: string, litersTotal: number, lastBrew?: { __typename?: 'Brew', id: string, status: string, progress: number, created: string, modified: string, brewer?: { __typename?: 'SlackProfile', userId: string, realName: string, displayName: string, imageOriginal: string, image48: string } | null, reactions: Array<{ __typename?: 'BrewReaction', id: string, isCustomReaction: boolean, reaction: string, emoji: string }> } | null }> } };
+
 export type MachinesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type MachinesQuery = { __typename?: 'Query', machines: Array<{ __typename?: 'Machine', id: string, name: string, status: string, avatarUrl: string, litersTotal: number, lastBrew?: { __typename?: 'Brew', id: string, status: string, progress: number, created: string, modified: string, brewer?: { __typename?: 'SlackProfile', userId: string, realName: string, displayName: string, imageOriginal: string, image48: string } | null, reactions: Array<{ __typename?: 'BrewReaction', id: string, isCustomReaction: boolean, reaction: string, emoji: string }> } | null }> };
 
-
-export const ConnectToKitchenEventsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"subscription","name":{"kind":"Name","value":"ConnectToKitchenEvents"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"connectToKitchenEvents"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<ConnectToKitchenEventsSubscription, ConnectToKitchenEventsSubscriptionVariables>;
+export const MachineFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Machine"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Machine"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"avatarUrl"}},{"kind":"Field","name":{"kind":"Name","value":"litersTotal"}},{"kind":"Field","name":{"kind":"Name","value":"lastBrew"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"progress"}},{"kind":"Field","name":{"kind":"Name","value":"created"}},{"kind":"Field","name":{"kind":"Name","value":"modified"}},{"kind":"Field","name":{"kind":"Name","value":"brewer"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"realName"}},{"kind":"Field","name":{"kind":"Name","value":"displayName"}},{"kind":"Field","name":{"kind":"Name","value":"imageOriginal"}},{"kind":"Field","alias":{"kind":"Name","value":"image48"},"name":{"kind":"Name","value":"image"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"size"},"value":{"kind":"IntValue","value":"48"}}]}]}},{"kind":"Field","name":{"kind":"Name","value":"reactions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"isCustomReaction"}},{"kind":"Field","name":{"kind":"Name","value":"reaction"}},{"kind":"Field","name":{"kind":"Name","value":"emoji"}}]}}]}}]}}]} as unknown as DocumentNode<MachineFragment, unknown>;
 export const UserStatsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"UserStats"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"users"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"realName"}},{"kind":"Field","name":{"kind":"Name","value":"displayName"}},{"kind":"Field","name":{"kind":"Name","value":"imageOriginal"}},{"kind":"Field","alias":{"kind":"Name","value":"image48"},"name":{"kind":"Name","value":"image"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"size"},"value":{"kind":"IntValue","value":"48"}}]},{"kind":"Field","name":{"kind":"Name","value":"litersTotal"}}]}}]}}]} as unknown as DocumentNode<UserStatsQuery, UserStatsQueryVariables>;
 export const TodayStatsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"TodayStats"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"stats"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"litersToday"}},{"kind":"Field","name":{"kind":"Name","value":"litersYesterday"}}]}}]}}]} as unknown as DocumentNode<TodayStatsQuery, TodayStatsQueryVariables>;
-export const MachinesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Machines"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"machines"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"avatarUrl"}},{"kind":"Field","name":{"kind":"Name","value":"litersTotal"}},{"kind":"Field","name":{"kind":"Name","value":"lastBrew"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"progress"}},{"kind":"Field","name":{"kind":"Name","value":"created"}},{"kind":"Field","name":{"kind":"Name","value":"modified"}},{"kind":"Field","name":{"kind":"Name","value":"brewer"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"realName"}},{"kind":"Field","name":{"kind":"Name","value":"displayName"}},{"kind":"Field","name":{"kind":"Name","value":"imageOriginal"}},{"kind":"Field","alias":{"kind":"Name","value":"image48"},"name":{"kind":"Name","value":"image"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"size"},"value":{"kind":"IntValue","value":"48"}}]}]}},{"kind":"Field","name":{"kind":"Name","value":"reactions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"isCustomReaction"}},{"kind":"Field","name":{"kind":"Name","value":"reaction"}},{"kind":"Field","name":{"kind":"Name","value":"emoji"}}]}}]}}]}}]}}]} as unknown as DocumentNode<MachinesQuery, MachinesQueryVariables>;
+export const MachineUpdateDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"subscription","name":{"kind":"Name","value":"MachineUpdate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"machineUpdate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"machines"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Machine"}}]}}]}}]}},...MachineFragmentDoc.definitions]} as unknown as DocumentNode<MachineUpdateSubscription, MachineUpdateSubscriptionVariables>;
+export const MachinesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Machines"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"machines"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Machine"}}]}}]}},...MachineFragmentDoc.definitions]} as unknown as DocumentNode<MachinesQuery, MachinesQueryVariables>;

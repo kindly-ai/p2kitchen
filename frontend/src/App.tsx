@@ -1,17 +1,22 @@
-import { useQuery, useSubscription } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import React from "react";
 
 import classes from "./App.module.css";
 import { Stats } from "./features/Stats/Stats";
 import { Today } from "./features/Today/Today";
-import { ConnectToKitchenEventsDocument, MachinesDocument } from "./generated";
+import { MachinesDocument, MachineUpdateDocument } from "./generated";
 
 const App = () => {
-  const { data: data, loading } = useQuery(MachinesDocument);
-  const { data: eventsData, loading: eventsLoading } = useSubscription(ConnectToKitchenEventsDocument, {
-    onSubscriptionData: ({ subscriptionData: { data, error, loading } }) => {
-      // TODO: do something with this
-      console.log("🔥 fresh datas", data, error, loading);
+  const { data: data, loading, subscribeToMore } = useQuery(MachinesDocument);
+
+  subscribeToMore({
+    document: MachineUpdateDocument,
+    updateQuery: (prev, { subscriptionData }) => {
+      if (!subscriptionData.data) return prev;
+      // overwrite all
+      return {
+        machines: subscriptionData.data.machineUpdate.machines,
+      };
     },
   });
 
