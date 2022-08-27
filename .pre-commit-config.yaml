@@ -11,7 +11,7 @@ repos:
   rev: v2.37.3
   hooks:
   - id: pyupgrade
-    args: [--py39-plus]
+    args: [--py310-plus]
 - repo: local
   hooks:
   - id: black

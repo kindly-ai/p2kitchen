@@ -70,7 +70,7 @@ class Machine:
         return await get_liters_total(self.id, self.volume)
 
     @strawberry.field
-    async def last_brew(self, info: Info) -> Optional[Brew]:
+    async def last_brew(self, info: Info) -> Brew | None:
         @sync_to_async
         def get_last_brew(machine_id):
             brews = models.Brew.objects.filter(machine_id=machine_id).exclude(status=models.Brew.Status.INVALID.value)

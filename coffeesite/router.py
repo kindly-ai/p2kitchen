@@ -12,7 +12,7 @@ from strawberry.schema import BaseSchema
 
 
 class CorsGraphQLHTTPConsumer(GraphQLHTTPConsumer):
-    _cors_headers: Union[dict, None]
+    _cors_headers: dict | None
 
     def __init__(self, **kwargs):
         self.allow_all_origins = getattr(settings, "CORS_ALLOW_ALL_ORIGINS", False)
