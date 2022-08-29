@@ -30,7 +30,7 @@ INSTALLED_APPS = [
     "strawberry.django",
     "corsheaders",
     "channels",
-    "daphne"
+    "daphne",
 ]
 INSTALLED_APPS += [
     "p2kitchen",
