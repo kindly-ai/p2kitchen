@@ -1,0 +1,10 @@
+query UserStats {
+  users {
+    userId
+    realName
+    displayName
+    imageOriginal
+    image48: image(size: 48)
+    litersTotal
+  }
+}

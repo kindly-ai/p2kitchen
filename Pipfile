@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 Django = ">=3.2,<4.0"
+channels-redis = "*"
 dj-database-url = "==1.0.*"
 django-braces = "==1.15.*"
 django-cors-headers = "*"
@@ -18,9 +19,11 @@ python-dotenv = "*"
 redis = "==4.3.*"
 requests = "==2.28.*"
 slack-sdk = "*"
-strawberry-graphql = "*"
+"strawberry-graphql[channels]" = "*"
 strawberry-graphql-django = "*"
-uvicorn = "*"
+twisted = {extras = ["http2", "tls"], version = "*"}
+uvicorn = {extras = ["standard"], version = "*"}
+django-rename-app = "*"
 
 [dev-packages]
 black = "==22.6.*"
@@ -34,4 +37,4 @@ responses = "*"
 isort = "*"
 
 [requires]
-python_version = "3.9"
+python_version = "3.10"

@@ -1,0 +1,7 @@
+# import "./machineFragment.gql"
+
+query Machines {
+  machines {
+   ...Machine
+  }
+}

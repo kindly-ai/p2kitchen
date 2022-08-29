@@ -1,39 +1,20 @@
-import { gql, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import React, { ReactElement, useMemo } from "react";
 
 import arrow from "../../assets/arrow.svg";
-import { Machine } from "../Today/Machine";
+import { MachinesQuery, SlackProfile, UserStatsDocument } from "../../generated";
 import classes from "./Stats.module.css";
 
-const USERS = gql`
-  {
-    users {
-      userId
-      realName
-      displayName
-      imageOriginal
-      image48: image(size: 48)
-      litersTotal
-    }
-  }
-`;
-
-type StatsProps = { machines: Machine[] };
+type StatsProps = { machines: MachinesQuery["machines"] };
 
 export const Stats = ({ machines }: StatsProps): ReactElement => {
-  const { data: userData, loading } = useQuery(USERS);
+  const { data: userData, loading } = useQuery(UserStatsDocument);
   const users = useMemo(
-    () =>
-      (userData?.users || [])
-        .filter((user: SlackProfile) => user.litersTotal >= 1)
-        .sort((a: SlackProfile, b: SlackProfile) => b.litersTotal - a.litersTotal),
+    () => (userData?.users || []).filter((user) => user.litersTotal >= 1).sort((a, b) => b.litersTotal - a.litersTotal),
     [userData]
   );
 
-  const topMachines = useMemo(
-    () => [...machines].sort((a: Machine, b: Machine) => b.litersTotal - a.litersTotal),
-    [machines]
-  );
+  const topMachines = useMemo(() => [...machines].sort((a, b) => b.litersTotal - a.litersTotal), [machines]);
 
   if (loading) return <p>Loading...</p>;
 
@@ -70,7 +51,7 @@ export const Stats = ({ machines }: StatsProps): ReactElement => {
       <h3>Colleagues brewing the most</h3>
       <table className={classes.Brewers}>
         <tbody>
-          {users.map((user: SlackProfile) => (
+          {users.map((user) => (
             <tr className={classes.BrewerItem} key={user.userId}>
               <td className={classes.Brewer}>
                 <img

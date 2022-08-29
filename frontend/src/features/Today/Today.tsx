@@ -1,23 +1,15 @@
-import { gql, useQuery } from "@apollo/client";
-import React, { ReactElement } from "react";
+import { useQuery } from "@apollo/client";
+import React from "react";
 
-import { Machine } from "./Machine";
+import { MachinesQuery, TodayStatsDocument } from "../../generated";
+import { MachineDetails } from "./MachineDetails";
 import classes from "./Today.module.css";
 
-type TodayProps = { machines: Machine[] };
+type TodayProps = { machines: MachinesQuery["machines"] };
 
-const GET_STATS = gql`
-  {
-    stats {
-      litersToday
-      litersYesterday
-    }
-  }
-`;
-
-const Summary = (): ReactElement => {
-  const { data, loading } = useQuery(GET_STATS);
-  if (loading) return <p>Loading</p>;
+const Summary = () => {
+  const { data, loading } = useQuery(TodayStatsDocument);
+  if (loading || !data?.stats) return <p>Loading...</p>;
 
   const { litersToday, litersYesterday } = data.stats;
   const diffBrew = litersToday - litersYesterday;
@@ -30,13 +22,13 @@ const Summary = (): ReactElement => {
   );
 };
 
-export const Today = ({ machines }: TodayProps): ReactElement => {
+export const Today = ({ machines }: TodayProps) => {
   return (
     <section>
       <h2>Today & now</h2>
       <p>Where to find the freshest coffee right now</p>
-      {machines.map((machine: Machine) => {
-        return <Machine key={machine.id} machine={machine} />;
+      {machines.map((machine) => {
+        return <MachineDetails key={machine.id} machine={machine} />;
       })}
       <Summary />
     </section>

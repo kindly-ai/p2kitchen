@@ -1,46 +1,26 @@
-import { gql, useQuery } from "@apollo/client";
-import React, { ReactElement } from "react";
+import { useQuery } from "@apollo/client";
+import React from "react";
 
 import classes from "./App.module.css";
 import { Stats } from "./features/Stats/Stats";
 import { Today } from "./features/Today/Today";
+import { MachinesDocument, MachineUpdateDocument } from "./generated";
 
-const GET_MACHINES = gql`
-  {
-    machines {
-      id
-      name
-      status
-      avatarUrl
-      litersTotal
-      lastBrew {
-        id
-        status
-        progress
-        created
-        modified
-        brewer {
-          userId
-          realName
-          displayName
-          imageOriginal
-          image48: image(size: 48)
-        }
-        reactions {
-          id
-          isCustomReaction
-          reaction
-          emoji
-        }
-      }
-    }
-  }
-`;
+const App = () => {
+  const { data: data, loading, subscribeToMore } = useQuery(MachinesDocument);
 
-const App = (): ReactElement => {
-  const { data, loading } = useQuery(GET_MACHINES);
+  subscribeToMore({
+    document: MachineUpdateDocument,
+    updateQuery: (prev, { subscriptionData }) => {
+      if (!subscriptionData.data) return prev;
+      // overwrite all
+      return {
+        machines: subscriptionData.data.machineUpdate.machines,
+      };
+    },
+  });
 
-  if (loading) return <p>Loading...</p>;
+  if (loading || !data?.machines) return <p>Loading...</p>;
 
   return (
     <div className={classes.App}>

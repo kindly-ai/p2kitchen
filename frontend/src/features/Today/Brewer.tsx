@@ -2,9 +2,11 @@ import React, { ReactElement } from "react";
 
 import bg from "../../assets/bg.jpg";
 import slack_icon from "../../assets/slack_mark.svg";
+import { MachinesQuery } from "../../generated";
 import classes from "./Today.module.css";
 
-type BrewerProps = { brew?: Brew };
+type Brew = MachinesQuery["machines"][0]["lastBrew"];
+type BrewerProps = { brew?: Brew | null };
 
 export const Brewer = ({ brew }: BrewerProps): ReactElement | null => {
   if (!brew) return null;
