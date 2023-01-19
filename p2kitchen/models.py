@@ -213,6 +213,7 @@ class Machine(TimeStampedModel):
     volume = models.DecimalField(max_digits=4, decimal_places=2, default=1.25, blank=True)
     status = models.CharField(choices=Status.choices, max_length=7, default=Status.IDLE.value)
     avatar_path = models.CharField(max_length=500, blank=True, default="")
+    slack_channel = models.CharField(max_length=64, null=False, blank=False)
 
     @property
     def avatar_url(self):

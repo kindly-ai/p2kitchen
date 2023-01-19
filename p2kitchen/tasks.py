@@ -15,7 +15,7 @@ UPDATE_DELAY_SECONDS = 3
 def start_brewing(brew: Brew):
     logger.debug("Started brewing")
     message = brew.started_message()
-    response = slack.chat_post_message(settings.SLACK_CHANNEL, **message)
+    response = slack.chat_post_message(brew.machine.slack_channel, **message)
 
     brew.slack_channel = response["channel"]
     brew.slack_ts = response["ts"]

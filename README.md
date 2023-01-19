@@ -11,6 +11,7 @@ pipenv run python manage.py run_huey -w 2  # Run worker
 
 ## Environment variables
 
-- `SLACK_CHANNEL`
 - `SLACK_API_TOKEN`
 - `SLACK_SIGNING_SECRET`
+- `DATABASE_URL`
+- `REDIS_URL`

@@ -107,7 +107,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",
 ]
 # Huey
-REDIS_URL = os.environ.get("REDIS_URL", "redis://localhost:6379")
+REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379")
 HUEY = RedisHuey("p2kitchen", results=False, immediate=TESTING, url=REDIS_URL)
 # Channels
 CHANNEL_LAYERS = {
@@ -121,7 +121,6 @@ CHANNEL_LAYERS = {
 # Slack
 SLACK_API_TOKEN = os.getenv("SLACK_API_TOKEN")
 SLACK_SIGNING_SECRET = os.getenv("SLACK_SIGNING_SECRET")
-SLACK_CHANNEL = os.getenv("SLACK_CHANNEL", "#kitchen-dev")
 # Brewing settings
 BREWTIME_AVG_SECONDS = int(os.getenv("BREWTIME_AVG_SECONDS", "290"))  # 4 min and 50 seconds
 
