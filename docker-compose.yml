@@ -4,3 +4,12 @@ services:
         image: redis
         ports:
             - "6379:6379"
+    web:
+        build:
+            context: .
+        ports:
+            - "8000:8000"
+    worker:
+        build:
+            context: .
+        command: [python, manage.py, run_huey, -w, "2"]
