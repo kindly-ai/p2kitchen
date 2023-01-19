@@ -17,6 +17,7 @@ TESTING = any(m in sys.modules for m in ["pytest", "py.test"])
 ALLOWED_HOSTS = ["*"] if DEBUG else os.getenv("ALLOWED_HOSTS", "").split(",")
 # Application definition
 INSTALLED_APPS = [
+    "daphne",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -30,7 +31,6 @@ INSTALLED_APPS = [
     "strawberry.django",
     "corsheaders",
     "channels",
-    "daphne",
 ]
 INSTALLED_APPS += [
     "p2kitchen",
