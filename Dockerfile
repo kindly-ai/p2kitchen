@@ -16,4 +16,4 @@ RUN pip install -r requirements.txt
 COPY . /app
 
 EXPOSE 8000
-CMD ["gunicorn", "-c", "gunicorn_conf.py", "p2kitchen.wsgi"]
+CMD ["gunicorn", "p2kitchen.wsgi"]

@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "ad8985f2c758ec3f34ced3ad31f219b6b19c03e25b0e31030df058a53bead84e"
+            "sha256": "305c784a157c1b7a60b91a62cc203823cb1fc61c967425a0ac3be1100b6920d5"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -47,6 +47,13 @@
             ],
             "markers": "python_version >= '3.6'",
             "version": "==22.2.0"
+        },
+        "autobahn": {
+            "hashes": [
+                "sha256:a88882ab4700ee9eee46c69c38e2b625f6fda48ab1ce61cf7b58b23cf2fadcb8"
+            ],
+            "markers": "python_version >= '3.7'",
+            "version": "==23.1.1"
         },
         "automat": {
             "hashes": [
@@ -285,6 +292,14 @@
             ],
             "markers": "python_version >= '3.6'",
             "version": "==39.0.0"
+        },
+        "daphne": {
+            "hashes": [
+                "sha256:a288ece46012b6b719c37150be67c69ebfca0793a8521bf821533bad983179b2",
+                "sha256:cce9afc8f49a4f15d4270b8cfb0e0fe811b770a5cc795474e97e4da287497666"
+            ],
+            "index": "pypi",
+            "version": "==4.0.0"
         },
         "dj-database-url": {
             "hashes": [
@@ -900,6 +915,14 @@
             ],
             "index": "pypi",
             "version": "==22.10.0"
+        },
+        "txaio": {
+            "hashes": [
+                "sha256:aaea42f8aad50e0ecfb976130ada140797e9dcb85fad2cf72b0f37f8cefcb490",
+                "sha256:f9a9216e976e5e3246dfd112ad7ad55ca915606b60b84a757ac769bd404ff704"
+            ],
+            "markers": "python_version >= '3.7'",
+            "version": "==23.1.1"
         },
         "typing-extensions": {
             "hashes": [

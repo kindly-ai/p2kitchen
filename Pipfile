@@ -23,6 +23,7 @@ slack-sdk = "*"
 strawberry-graphql-django = "*"
 twisted = {extras = ["http2", "tls"], version = "*"}
 uvicorn = {extras = ["standard"], version = "*"}
+daphne = "*"
 
 [dev-packages]
 black = "==22.6.*"
